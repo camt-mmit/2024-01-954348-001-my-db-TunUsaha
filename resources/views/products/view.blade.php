@@ -13,7 +13,6 @@
 
         <dt> Price</dt>
         <dd>{{ number_format((float)) $product->code, 2 }}</dd>
-
-        <pre>{{ $product->des</pre>
     </dl>
+        <pre>{{ $product->description}}</pre>
 </main>

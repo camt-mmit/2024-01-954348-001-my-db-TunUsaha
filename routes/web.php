@@ -12,5 +12,5 @@ Route::controller(ProductController::class)
     ->name('products.')
     ->group(static function() {
         Route::get('', 'list')->name('list');
-        Route::get('')->name('show');
+        Route::get('{/product}','show')->name('view');
     });
