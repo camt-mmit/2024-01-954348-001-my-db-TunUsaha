@@ -9,10 +9,10 @@
 <body class="bg-gray-100">
     <div class="container mx-auto px-6">
         <header class="bg-white border-b border-gray-300 shadow-sm py-4 mb-8 rounded-lg">
-            <h1 class="text-4xl font-semibold text-gray-900 text-center">@section('title-container')@yield('title')@show</h1>
+            <h1 class="text-16xl font-semibold text-gray-900 text-center">@section('title-container')@yield('title')@show</h1>
         </header>
         <nav class="mb-8">
-            <ul class="flex justify-center space-x-8">
+            <ul class="flex justify-center space-x-6">
                 <li><a href="{{ route('products.list') }}" class="text-blue-500 hover:text-blue-700 font-medium transition-colors duration-300">Product</a></li>
                 <li><a href="{{ route('shops.list') }}" class="text-blue-500 hover:text-blue-700 font-medium transition-colors duration-300">Shop</a></li>
             </ul>
