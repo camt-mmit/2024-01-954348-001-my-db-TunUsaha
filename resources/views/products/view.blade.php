@@ -3,17 +3,13 @@
 @section('title', $title)
 
 @section('content')
-<main>
-    <dl>
-        <dt>Code</dt>
-        <dd>{{ $product->code }}</dd>
-
-        <dt>Name</dt>
-        <dd>{{ $product->name }}</dd>
-
-        <dt>Price</dt>
-        <dd>{{ number_format($product->price, 2) }}</dd>
-    </dl>
-    <pre>{{ $product->description }}</pre>
-</main>
+    <div class="details">
+        <h2>{{ $product->name }}</h2>
+        <p><strong>Code:</strong> {{ $product->code }}</p>
+        <p><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p>
+        <p><strong>Description:</strong> {{ $product->description }}</p>
+    </div>
+    <div class="button-container">
+        <a href="{{ route('products.list') }}" class="button">Back to Products List</a>
+    </div>
 @endsection

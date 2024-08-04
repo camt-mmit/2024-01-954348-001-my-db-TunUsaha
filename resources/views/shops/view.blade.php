@@ -3,22 +3,14 @@
 @section('title', $title)
 
 @section('content')
-<main>
-    <dl class="grid grid-cols-2 gap-4">
-        <dt class="font-bold">Code</dt>
-        <dd>{{ $shop->code }}</dd>
-
-        <dt class="font-bold">Name</dt>
-        <dd>{{ $shop->name }}</dd>
-
-        <dt class="font-bold">Owner</dt>
-        <dd>{{ $shop->owner }}</dd>
-
-        <dt class="font-bold">Location</dt>
-        <dd>{{ number_format($shop->latitude, 7) }}, {{ number_format($shop->longitude, 7) }}</dd>
-
-        <dt class="font-bold">Address</dt>
-        <dd>{{ $shop->address }}</dd>
-    </dl>
-</main>
+    <div class="details">
+        <h2>{{ $shop->name }}</h2>
+        <p><strong>Code:</strong> {{ $shop->code }}</p>
+        <p><strong>Owner:</strong> {{ $shop->owner }}</p>
+        <p><strong>Location:</strong> {{ number_format($shop->latitude, 7) }}, {{ number_format($shop->longitude, 7) }}</p>
+        <p><strong>Address:</strong> {{ $shop->address }}</p>
+    </div>
+    <div class="button-container">
+        <a href="{{ route('shops.list') }}" class="button">Back to Shops List</a>
+    </div>
 @endsection

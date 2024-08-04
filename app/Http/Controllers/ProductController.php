@@ -4,18 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    public function list()
+    private string $title = 'Product';
+
+    public function list(): View
     {
-        $products = Product::all();
-        return view('products.list', ['products' => $products, 'title' => 'Product : List']);
+        $products = Product::orderBy('code')->get();
+        return view('products.list', [
+            'title' => "{$this->title} : List",
+            'products' => $products,
+        ]);
     }
 
-    public function show($product)
+    public function show(string $productCode): View
     {
-        $product = Product::where('code', $product)->firstOrFail();
-        return view('products.view', ['product' => $product, 'title' => 'Product : List']);
+        $product = Product::where('code', $productCode)->firstOrFail();
+        return view('products.view', [
+            'title' => "{$this->title} : View",
+            'product' => $product,
+        ]);
     }
 }

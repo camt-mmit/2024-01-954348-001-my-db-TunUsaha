@@ -4,18 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ShopController extends Controller
 {
-    public function list()
+    private string $title = 'Shop';
+
+    public function list(): View
     {
-        $shops = Shop::all();
-        return view('shops.list', ['shops' => $shops, 'title' => 'Shop : List']);
+        $shops = Shop::orderBy('code')->get();
+        return view('shops.list', [
+            'title' => "{$this->title} : List",
+            'shops' => $shops,
+        ]);
     }
 
-    public function show($shop)
+    public function show(string $shopCode): View
     {
-        $shop = Shop::where('code', $shop)->firstOrFail();
-        return view('shops.view', ['shop' => $shop, 'title' => 'Shop : View']);
+        $shop = Shop::where('code', $shopCode)->firstOrFail();
+        return view('shops.view', [
+            'title' => "{$this->title} : View",
+            'shop' => $shop,
+        ]);
     }
 }
