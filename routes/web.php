@@ -11,9 +11,11 @@ Route::get('/', function () {
 Route::controller(ProductController::class)
     ->prefix('products')
     ->name('products.')
-    ->group(static function () {
+    ->group(function () {
         Route::get('', 'list')->name('list');
-        Route::get('{product}', 'show')->name('view');
+        Route::get('/create', 'showCreateForm')->name('create-form');
+        Route::post('/create', 'create')->name('create');
+        Route::get('/{product}', 'show')->name('view');
     });
 
 Route::controller(ShopController::class)
