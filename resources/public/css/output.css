@@ -1102,85 +1102,16 @@ body {
   font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-color);
   line-height: 1.5;
-  background-image: url("https://media.giphy.com/media/l1IBiaH8c1Cxuhq1y/giphy.gif?cid=790b7611soehp3vy5pvtwi6u1s6p8bd19mblrms146xas495&ep=v1_gifs_search&rid=giphy.gif&ct=g");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding-bottom: 40px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-}
-
-form {
-  margin: 8px auto;
-  padding: 8px 0;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-  width: 100%;
-}
-
-.form-group label {
-  margin-right: 8px;
-  font-size: 14px;
-  text-align: right;
-}
-
-.form-group input {
-  margin-left: 10px;
-}
-
-.form-group-search {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-  width: 100%;
-  margin-left: 17px;
-}
-
-.form-group-search label {
-  margin-right: 15px;
-  font-size: 14px;
-  text-align: right;
-}
-
-.form-group-search input {
-  margin-left: 2.5px;
-}
-
-input[type="text"],
-input[type="number"] {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
-  width: 70%;
-  box-sizing: border-box;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-  -webkit-appearance: textfield;
-          appearance: textfield;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 
 /* Header Styles */
@@ -1203,8 +1134,8 @@ header .container {
 }
 
 header h1 {
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 /* Navigation Styles */
@@ -1219,7 +1150,7 @@ nav ul li a {
   text-decoration: none;
   color: var(--text-color);
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 16px;
   transition: color 0.3s ease;
 }
 
@@ -1230,12 +1161,135 @@ nav ul li a:hover {
 /* Main Content Styles */
 
 main {
+  flex-grow: 1;
   padding: 40px 0;
+}
+
+.page-title {
+  font-size: 48px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* Form Styles */
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  background-color: var(--secondary-color);
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.search-container {
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.app-inp-search {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.app-inp-search input {
+  flex-grow: 1;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #fff;
+  margin-left: 10px;
+}
+
+.price-filter {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+.form-group label {
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.price-input {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #fff;
+  width: 100%;
+}
+
+.button-group {
+  display: flex;
+  gap: 20px;
+}
+
+.primary-button, .secondary-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.primary-button {
+  color: #fff;
+  background-color: var(--primary-color);
+}
+
+.primary-button:hover {
+  background-color: #004499;
+}
+
+.secondary-button {
+  color: var(--primary-color);
+  background-color: transparent;
+  border: 2px solid var(--primary-color);
+  text-decoration: none;
+}
+
+.secondary-button:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.new-product-button {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 16px;
+  color: #fff;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-bottom: 40px;
+  transition: background-color 0.3s ease;
+}
+
+.new-product-button:hover {
+  background-color: #004499;
 }
 
 /* Table Styles */
 
-table {
+.product-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -1246,14 +1300,14 @@ table {
   margin-bottom: 30px;
 }
 
-th,
-td {
+.product-table th,
+.product-table td {
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
 }
 
-th {
+.product-table th {
   font-weight: 600;
   color: var(--light-text-color);
   text-transform: uppercase;
@@ -1261,99 +1315,65 @@ th {
   letter-spacing: 0.05em;
 }
 
-tr:last-child td {
+.product-table tr:last-child td {
   border-bottom: none;
 }
 
-/* Link Styles */
-
-a {
+.product-table a {
   color: var(--primary-color);
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
-a:hover {
+.product-table a:hover {
   text-decoration: underline;
 }
 
-/* Button Styles */
+/* Pagination Styles */
 
-.button {
-  display: inline-block;
-  background-color: var(--primary-color);
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-decoration: none;
+.pagination-container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
 }
 
-.button:hover {
-  background-color: #004499;
+.pagination-container ul {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+}
+
+.pagination-container li {
+  display: inline-block;
+}
+
+.pagination-container li a,
+.pagination-container li span {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border-radius: 4px;
   text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-container li.active span,
+.pagination-container li a:hover {
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
 /* Footer Styles */
 
 footer {
+  background-color: var(--secondary-color);
+  padding: 20px 0;
   text-align: center;
-  padding: 10px 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  -webkit-backdrop-filter: blur(20px);
-          backdrop-filter: blur(20px);
+}
+
+footer .container {
   color: var(--light-text-color);
-  font-size: 0.8rem;
-  border-top: 1px solid var(--border-color);
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
-
-/* Product and Shop Details Styles */
-
-.details {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-}
-
-.details h2 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.details p {
-  margin-bottom: 10px;
-}
-
-.button {
-  display: inline-block;
-  background-color: var(--primary-color);
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-decoration: none;
-}
-
-.button:hover {
-  background-color: #004499;
-  text-decoration: none;
-}
-
-.button-container {
-  text-align: center;
-  margin-top: 30px;
+  font-size: 14px;
 }
 
 /* Responsive Design */
@@ -1366,15 +1386,50 @@ footer {
 
   nav ul {
     margin-top: 20px;
+    flex-direction: column;
+    align-items: center;
   }
 
-  table {
-    font-size: 0.9rem;
+  nav ul li {
+    margin-bottom: 10px;
   }
 
-  .details {
+  .page-title {
+    font-size: 36px;
+  }
+
+  .search-form {
     padding: 20px;
   }
+
+  .price-filter {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .primary-button, .secondary-button {
+    width: 100%;
+  }
+
+  .product-table {
+    font-size: 14px;
+  }
+}
+
+.no-products {
+  text-align: center;
+  font-size: 18px;
+  color: var(--light-text-color);
+  margin-top: 40px;
 }
 
 .selection\:bg-\[\#FF2D20\] *::-moz-selection {

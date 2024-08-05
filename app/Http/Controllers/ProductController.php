@@ -11,53 +11,56 @@ use Illuminate\Http\Request;
 class ProductController extends SearchableController
 {
     protected string $title = 'Products';
+    protected int $itemsPerPage = 9;
 
     protected function getQuery(): Builder
     {
         return Product::orderBy('code');
     }
 
-    /*public function productList(Request $request): View
-    {
-        $search = $this->prepareSearch($request->getQueryParams());
-        $query = $this->search($search);
-        return view('products.list', [
-            'title' => "{$this->title} : List",
-            'search' => $search,
-            'products' => $query->paginate(5),
-        ]);
-    }*/
-
     public function show(string $productCode): View
     {
         $product = $this->find($productCode);
-        return view('products.view', [
-            'title' => "{$this->title} : View",
+        return $this->view('products.view', [
             'product' => $product,
         ]);
     }
 
     public function showCreateForm(): View
     {
-        return view('products.create-form', [
-            'title' => "{$this->title} : Create",
-        ]);
+        return $this->view('products.create-form');
     }
 
     public function create(Request $request): RedirectResponse
     {
-        $product = Product::create($request->getParsedBody());
-        return redirect()->route('products.list');
+        $validatedData = $request->validate([
+            'code' => 'required|unique:products',
+            'name' => 'required',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        Product::create($validatedData);
+        return redirect()->route('products.list')->with('success', 'Product created successfully.');
     }
 
     public function list(Request $request, string $title = 'Products'): View
     {
         $search = $this->prepareSearch($request->query());
         $query = $this->search($search);
-        return view('products.list', [
+
+        $products = $query->paginate($this->itemsPerPage)->appends($search);
+
+        return $this->view('products.list', [
             'search' => $search,
-            'title' => "{$title} : List",
-            'products' => $query->paginate(3),
-        ]);
+            'products' => $products,
+        ], $title);
+    }
+
+    protected function view(string $view, array $data = [], string $customTitle = null): View
+    {
+        $title = $customTitle ?? $this->title;
+        return view($view, array_merge([
+            'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
+        ], $data));
     }
 }
