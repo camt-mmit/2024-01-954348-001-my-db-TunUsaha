@@ -641,6 +641,10 @@ video {
   margin-top: 1.5rem;
 }
 
+.inline {
+  display: inline;
+}
+
 .flex {
   display: flex;
 }
@@ -949,6 +953,11 @@ video {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -983,6 +992,11 @@ video {
 
 .text-black\/50 {
   color: rgb(0 0 0 / 0.5);
+}
+
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
 .text-gray-500 {
@@ -1090,6 +1104,7 @@ video {
   --text-color: #1d1d1f;
   --light-text-color: #86868b;
   --border-color: #d2d2d7;
+  --form-spacing: 20px;
 }
 
 * {
@@ -1219,6 +1234,7 @@ main {
   display: flex;
   align-items: center;
   width: 50%;
+  margin-bottom: var(--form-spacing);
 }
 
 .form-group label {
@@ -1233,11 +1249,21 @@ main {
   border-radius: 8px;
   background-color: #fff;
   width: 100%;
+  -moz-appearance: textfield;
+  /* Firefox */
+  margin-bottom: var(--form-spacing);
+}
+
+.price-input::-webkit-inner-spin-button,
+.price-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .button-group {
   display: flex;
   gap: 20px;
+  margin-top: var(--form-spacing);
 }
 
 .primary-button, .secondary-button {
@@ -1430,6 +1456,73 @@ footer .container {
   font-size: 18px;
   color: var(--light-text-color);
   margin-top: 40px;
+}
+
+/* Product Actions Styles */
+
+.product-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.delete-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+/* Responsive adjustments for product actions */
+
+@media (max-width: 768px) {
+  .product-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .product-actions .primary-button,
+    .product-actions .delete-button {
+    width: 100%;
+  }
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  background-color: var(--secondary-color);
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  /* เพิ่มความกว้างให้เต็มพื้นหลัง */
+  box-sizing: border-box;
+  /* ทำให้ padding และ border รวมอยู่ใน width */
+}
+
+.create-form input {
+  width: calc(100% - 1px);
+  /* ให้ช่อง input ยาวใกล้เคียงกับขอบของ .create-form */
+  margin-bottom: 20px;
+  /* เพิ่มช่องว่างระหว่าง input */
+  padding: 10px;
+  /* เพิ่มพื้นที่ภายในช่อง input */
+  border: 1px solid #ccc;
+  /* กำหนดขอบของ input */
+  border-radius: 8px;
+  /* เพิ่มมุมโค้งให้กับ input */
+  box-sizing: border-box;
+  /* ทำให้ padding และ border รวมอยู่ใน width */
 }
 
 .selection\:bg-\[\#FF2D20\] *::-moz-selection {
@@ -1766,3 +1859,4 @@ footer .container {
     color: rgb(209 213 219 / var(--tw-text-opacity));
   }
 }
+

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class ProductController extends SearchableController
 {
     protected string $title = 'Products';
-    protected int $itemsPerPage = 9;
+    protected int $itemsPerPage = 5;
 
     protected function getQuery(): Builder
     {
@@ -37,6 +37,7 @@ class ProductController extends SearchableController
             'code' => 'required|unique:products',
             'name' => 'required',
             'price' => 'required|numeric|min:0',
+            'description' => 'required',
         ]);
 
         Product::create($validatedData);
@@ -54,6 +55,34 @@ class ProductController extends SearchableController
             'search' => $search,
             'products' => $products,
         ], $title);
+    }
+
+    public function showEditForm(string $productCode): View
+    {
+        $product = $this->find($productCode);
+        return $this->view('products.edit-form', [
+            'product' => $product,
+        ]);
+    }
+
+    public function update(Request $request, string $productCode): RedirectResponse
+    {
+        $product = $this->find($productCode);
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric|min:0',
+            'description' => 'required',
+        ]);
+
+        $product->update($validatedData);
+        return redirect()->route('products.view', $product->code)->with('success', 'Product updated successfully.');
+    }
+
+    public function delete(string $productCode): RedirectResponse
+    {
+        $product = $this->find($productCode);
+        $product->delete();
+        return redirect()->route('products.list')->with('success', 'Product deleted successfully.');
     }
 
     protected function view(string $view, array $data = [], string $customTitle = null): View

@@ -12,7 +12,7 @@
 <body>
     <header>
         <div class="container">
-            <h1>@section('title-container')@yield('title')@show</h1>
+            <h1 >@section('title-container')@yield('title')@show</h1>
             <nav>
                 <ul>
                     <li><a href="{{ route('products.list') }}">Product</a></li>
@@ -23,7 +23,7 @@
     </header>
 
     <main>
-        <div class="container">
+        <div class="container ">
             @yield('content')
         </div>
     </main>

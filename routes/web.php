@@ -16,6 +16,9 @@ Route::controller(ProductController::class)
         Route::get('/create', 'showCreateForm')->name('create-form');
         Route::post('/create', 'create')->name('create');
         Route::get('/{product}', 'show')->name('view');
+        Route::get('/{product}/edit', 'showEditForm')->name('edit-form');
+        Route::put('/{product}', 'update')->name('update');
+        Route::delete('/{product}', 'delete')->name('delete');
     });
 
 Route::controller(ShopController::class)

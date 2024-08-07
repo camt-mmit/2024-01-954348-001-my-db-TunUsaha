@@ -14,11 +14,11 @@
         </div>
         <div class="price-filter">
             <div class="form-group">
-                <label for="app-inp-min-price">Min Price <span class="separator">::</span></label>
+                <label for="app-inp-min-price">Min Price <span class="separator text-blue-600">::</span></label>
                 <input id="app-inp-min-price" type="number" name="minPrice" value="{{ $search['minPrice'] ?? '' }}" class="price-input" />
             </div>
             <div class="form-group">
-                <label for="app-inp-max-price">Max Price <span class="separator">::</span></label>
+                <label for="app-inp-max-price">Max Price <span class="separator text-blue-600">::</span></label>
                 <input id="app-inp-max-price" type="number" name="maxPrice" value="{{ $search['maxPrice'] ?? '' }}" class="price-input" />
             </div>
         </div>
