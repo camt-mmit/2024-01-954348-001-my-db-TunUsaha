@@ -3,8 +3,16 @@
 @section('title', $title)
 
 @section('content')
-@if(isset($shop))
 <h1 class="page-title">Shop Details</h1>
+@if(isset($shop))
+<div class="product-actions">
+    <a href="{{ route('shops.edit-form', $shop->code) }}" class="primary-button">Edit Shop</a>
+    <form action="{{ route('shops.delete', $shop->code) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="delete-button">Delete Shop</button>
+    </form>
+</div>
 <div class="search-form">
     <div class="container">
         <div class="details">

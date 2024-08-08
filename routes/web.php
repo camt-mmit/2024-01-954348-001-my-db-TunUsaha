@@ -21,10 +21,16 @@ Route::controller(ProductController::class)
         Route::delete('/{product}', 'delete')->name('delete');
     });
 
-Route::controller(ShopController::class)
+    Route::controller(ShopController::class)
     ->prefix('shops')
     ->name('shops.')
     ->group(static function () {
         Route::get('', 'list')->name('list');
+        Route::get('/create', 'showCreateForm')->name('create-form');
+        Route::post('/create', 'create')->name('create');
         Route::get('{shop}', 'show')->name('view');
+        Route::get('{shop}/edit', 'showEditForm')->name('edit-form');
+        Route::put('{shop}', 'update')->name('update');
+        Route::delete('{shop}', 'delete')->name('delete');
     });
+

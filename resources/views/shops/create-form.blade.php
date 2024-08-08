@@ -8,9 +8,9 @@
 
 @section('content')
 <div class="container">
-    <h1 class="page-title">Create New Product</h1>
+    <h1 class="page-title">Create New Shop</h1>
 
-    <form action="{{ route('products.create-form') }}" method="post" class="create-form">
+    <form action="{{ route('shops.create') }}" method="post" class="create-form">
         @csrf
 
         <div class="form-group">
@@ -24,17 +24,28 @@
         </div>
 
         <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" id="price" step="any" name="price" required>
+            <label for="owner">Owner</label>
+            <input type="text" id="owner" name="owner" required>
         </div>
 
         <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" rows="5" required class="price-input"></textarea>
+            <label for="latitude">Latitude</label>
+            <input type="number" id="latitude" name="latitude" step="any" required>
         </div>
+
+        <div class="form-group">
+            <label for="longitude">Longitude</label>
+            <input type="number" id="longitude" name="longitude" step="any" required>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="5" required class="price-input"></textarea>
+        </div>
+
         <div class="button-group">
-            <button type="submit" class="primary-button ">Create Product</button>
-            <a href="{{ route('products.list') }}" class="delete-button ">Cancel</a>
+            <button type="submit" class="primary-button">Create Shop</button>
+            <a href="{{ route('shops.list') }}" class="delete-button">Cancel</a>
         </div>
     </form>
 </div>
