@@ -9,7 +9,7 @@
         <div class="search-container">
             <label class="app-inp-search">
                 Search
-                <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input" />
+                <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input" placeholder="Search by code, name, or owner" />
             </label>
         </div>
         <div class="button-group">

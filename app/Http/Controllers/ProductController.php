@@ -18,6 +18,22 @@ class ProductController extends SearchableController
         return Product::orderBy('code');
     }
 
+    // เพิ่มเมธอดที่ implement จาก SearchableController
+    protected function getSearchType(): string
+    {
+        return 'products';
+    }
+
+    protected function getItemsPerPage(): int
+    {
+        return $this->itemsPerPage;
+    }
+
+    protected function getListViewName(): string
+    {
+        return 'products.list';
+    }
+
     public function show(string $productCode): View
     {
         $product = $this->find($productCode);
@@ -44,17 +60,15 @@ class ProductController extends SearchableController
         return redirect()->route('products.list')->with('success', 'Product created successfully.');
     }
 
-    public function list(Request $request, string $title = 'Products'): View
+    public function list(Request $request): View
     {
         $search = $this->prepareSearch($request->query());
         $query = $this->search($search);
-
-        $products = $query->paginate($this->itemsPerPage)->appends($search);
-
-        return $this->view('products.list', [
+        $products = $query->paginate($this->getItemsPerPage())->appends($search);
+        return $this->view($this->getListViewName(), [
             'search' => $search,
             'products' => $products,
-        ], $title);
+        ]);
     }
 
     public function showEditForm(string $productCode): View

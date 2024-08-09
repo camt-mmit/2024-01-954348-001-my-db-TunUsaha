@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\View\View;
 
 abstract class SearchableController extends Controller
 {
     protected static array $ITEMS = [];
 
     abstract protected function getQuery(): Builder;
+    abstract protected function getSearchType(): string;
+    abstract protected function getItemsPerPage(): int;
+    abstract protected function getListViewName(): string;
 
     protected function prepareSearch(array $search): array {
         $search['term'] = $search['term'] ?? null;
@@ -21,13 +23,27 @@ abstract class SearchableController extends Controller
         return $search;
     }
 
-    protected function filterByTerm(Builder $query, ?string $term): Builder {
+    protected function filterByTermForProducts(Builder $query, ?string $term): Builder {
         if (!empty($term)) {
             foreach (preg_split('/\s+/', trim($term)) as $word) {
                 $query->where(function (Builder $innerQuery) use ($word): void {
                     $innerQuery
                         ->where('code', 'LIKE', '%' . $word . '%')
                         ->orWhere('name', 'LIKE', '%' . $word . '%');
+                });
+            }
+        }
+        return $query;
+    }
+
+    protected function filterByTermForShops(Builder $query, ?string $term): Builder {
+        if (!empty($term)) {
+            foreach (preg_split('/\s+/', trim($term)) as $word) {
+                $query->where(function (Builder $innerQuery) use ($word): void {
+                    $innerQuery
+                        ->where('code', 'LIKE', '%' . $word . '%')
+                        ->orWhere('name', 'LIKE', '%' . $word . '%')
+                        ->orWhere('owner', 'LIKE', '%' . $word . '%');
                 });
             }
         }
@@ -44,48 +60,42 @@ abstract class SearchableController extends Controller
         return $query;
     }
 
-    protected function filter(Builder $query, array $search): Builder {
-        $query = $this->filterByTerm($query, $search['term']);
+    protected function filter(Builder $query, array $search, string $type = 'products'): Builder {
+        if ($type === 'products') {
+            $query = $this->filterByTermForProducts($query, $search['term']);
+        } else if ($type === 'shops') {
+            $query = $this->filterByTermForShops($query, $search['term']);
+        }
         $query = $this->filterByPrice($query, $search['minPrice'], $search['maxPrice']);
         return $query;
     }
 
     protected function search(array $search): Builder {
         $query = $this->getQuery();
-        return $this->filter($query, $search);
+        return $this->filter($query, $search, $this->getSearchType());
     }
 
-    // For easily searching by code.
     public function find(string $code): Model {
         return $this->getQuery()->where('code', $code)->firstOrFail();
     }
 
-    public function list(Request $request, string $title = 'Products'): \Illuminate\View\View {
-        $minPrice = $request->query('minPrice');
-        $maxPrice = $request->query('maxPrice');
-        $minPrice = is_numeric($minPrice) ? (float) $minPrice : null;
-        $maxPrice = is_numeric($maxPrice) ? (float) $maxPrice : null;
-
+    public function list(Request $request): View {
         $search = $this->prepareSearch($request->query());
         $query = $this->search($search);
-
-        return View::make('products.list', [
-            'title' => "{$title} : List",
+        $items = $query->paginate($this->getItemsPerPage())->appends($search);
+        return view($this->getListViewName(), [
             'search' => $search,
-            'products' => $query->paginate(5),
-            'minPrice' => $minPrice,
-            'maxPrice' => $maxPrice,
+            'items' => $items,
         ]);
     }
 
-
     protected function filterArrayByTerm(array $items, string $term): array {
         $results = [];
-
         foreach ($items as $item) {
             $nameMatch = stripos($item['name'], $term) !== false;
             $codeMatch = stripos($item['code'], $term) !== false;
-            if ($nameMatch || $codeMatch) {
+            $ownerMatch = stripos($item['owner'], $term) !== false;
+            if ($nameMatch || $codeMatch || $ownerMatch) {
                 $results[] = $item;
             }
         }
@@ -94,7 +104,6 @@ abstract class SearchableController extends Controller
 
     protected function filterArrayByPrice(array $items, ?float $minPrice, ?float $maxPrice): array {
         $results = [];
-
         foreach ($items as $item) {
             if (($minPrice === null || $item['price'] >= $minPrice) &&
                 ($maxPrice === null || $item['price'] <= $maxPrice)) {

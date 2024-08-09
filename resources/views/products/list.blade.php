@@ -9,17 +9,17 @@
         <div class="search-container">
             <label class="app-inp-search">
                 Search
-                <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input" />
+                <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input" placeholder="Search by code, or name"/>
             </label>
         </div>
         <div class="price-filter">
             <div class="form-group">
                 <label for="app-inp-min-price">Min Price <span class="separator text-blue-600">::</span></label>
-                <input id="app-inp-min-price" type="number" name="minPrice" value="{{ $search['minPrice'] ?? '' }}" class="price-input" />
+                <input id="app-inp-min-price" type="number" name="minPrice" value="{{ $search['minPrice'] ?? '' }}" class="price-input" placeholder="-" />
             </div>
             <div class="form-group">
                 <label for="app-inp-max-price">Max Price <span class="separator text-blue-600">::</span></label>
-                <input id="app-inp-max-price" type="number" name="maxPrice" value="{{ $search['maxPrice'] ?? '' }}" class="price-input" />
+                <input id="app-inp-max-price" type="number" name="maxPrice" value="{{ $search['maxPrice'] ?? '' }}" class="price-input" placeholder="-"/>
             </div>
         </div>
         <div class="button-group">

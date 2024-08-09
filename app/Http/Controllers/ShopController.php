@@ -18,6 +18,33 @@ class ShopController extends SearchableController
         return Shop::orderBy('code');
     }
 
+    protected function getSearchType(): string
+    {
+        return 'shops';
+    }
+
+    protected function getItemsPerPage(): int
+    {
+        return $this->itemsPerPage;
+    }
+
+    protected function getListViewName(): string
+    {
+        return 'shops.list';
+    }
+
+    public function index(): View
+{
+    $search = $this->prepareSearch(request()->all());
+    $query = $this->search($search);
+    $shops = $query->paginate($this->getItemsPerPage())->appends($search);
+
+    return $this->view($this->getListViewName(), [
+        'shops' => $shops,
+        'search' => $search
+    ]);
+}
+
     public function show(string $shop): View
     {
         $shop = $this->find($shop);
@@ -44,19 +71,6 @@ class ShopController extends SearchableController
 
         Shop::create($validatedData);
         return redirect()->route('shops.list')->with('success', 'Shop created successfully.');
-    }
-
-    public function list(Request $request, string $title = 'Shops'): View
-    {
-        $search = $this->prepareSearch($request->query());
-        $query = $this->search($search);
-
-        $shops = $query->paginate($this->itemsPerPage)->appends($search);
-
-        return $this->view('shops.list', [
-            'search' => $search,
-            'shops' => $shops,
-        ], $title);
     }
 
     public function showEditForm(string $shop): View
@@ -95,7 +109,8 @@ class ShopController extends SearchableController
     {
         $title = $customTitle ?? $this->title;
         return view($view, array_merge([
-            'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
+            'title' => $title,
         ], $data));
     }
 }
+

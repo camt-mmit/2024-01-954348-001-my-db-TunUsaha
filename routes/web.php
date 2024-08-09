@@ -25,7 +25,7 @@ Route::controller(ProductController::class)
     ->prefix('shops')
     ->name('shops.')
     ->group(static function () {
-        Route::get('', 'list')->name('list');
+        Route::get('', 'index')->name('list');
         Route::get('/create', 'showCreateForm')->name('create-form');
         Route::post('/create', 'create')->name('create');
         Route::get('{shop}', 'show')->name('view');
@@ -33,4 +33,5 @@ Route::controller(ProductController::class)
         Route::put('{shop}', 'update')->name('update');
         Route::delete('{shop}', 'delete')->name('delete');
     });
+
 
