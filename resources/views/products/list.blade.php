@@ -8,7 +8,7 @@
     <form action="{{ route('products.list') }}" method="get" class="search-form">
         <div class="search-container">
             <label class="app-inp-search">
-                Search
+                <label>Search <span class="separator text-blue-600">::</span></label>
                 <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input" placeholder="Search by code, or name"/>
             </label>
         </div>
