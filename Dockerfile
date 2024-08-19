@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.3.8-fpm
 
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -18,3 +18,4 @@ COPY . .
 RUN composer install
 
 RUN chown -R www-data:www-data /var/www
+
