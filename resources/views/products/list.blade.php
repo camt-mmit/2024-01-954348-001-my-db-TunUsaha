@@ -1,8 +1,6 @@
 @extends('layouts.main')
 
-@section('title-container')
-    Products
-@endsection
+@section('title', $title)
 
 @section('content')
 <div class="content-wrapper">

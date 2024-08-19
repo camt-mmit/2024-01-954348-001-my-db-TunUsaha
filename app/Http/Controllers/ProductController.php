@@ -101,8 +101,14 @@ class ProductController extends SearchableController
     protected function view(string $view, array $data = [], string $customTitle = null): View
     {
         $title = $customTitle ?? $this->title;
-        return view($view, array_merge([
-            'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
-        ], $data));
+        if ($view == 'products.list') {
+            return view($view, array_merge([
+                'title' => $title,
+            ], $data));
+        } else {
+            return view($view, array_merge([
+                'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
+            ], $data));
+        }
     }
 }
