@@ -18,7 +18,6 @@ class ProductController extends SearchableController
         return Product::orderBy('code');
     }
 
-    // เพิ่มเมธอดที่ implement จาก SearchableController
     protected function getSearchType(): string
     {
         return 'products';
