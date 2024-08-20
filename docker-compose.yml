@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel-app
+    container_name: my-db
     restart: unless-stopped
     working_dir: /var/www
     volumes:
@@ -36,8 +36,8 @@ services:
       - laravel
 
   db:
-    image: mysql:5.7
-    container_name: laravel-db
+    image: mysql:8.3
+    container_name: u652110109_db
     restart: unless-stopped
     ports:
       - "3307:3306"
