@@ -12,7 +12,7 @@
 <body>
     <header>
         <div class="container">
-            <h1 >@section('title-container')@yield('title')@show</h1>
+            <h1>@section('title-container')@yield('title')@show</h1>
             <nav>
                 <ul>
                     <li><a href="{{ route('products.list') }}">Product</a></li>
@@ -32,7 +32,7 @@
 </body>
 <footer>
     <div class="container">
-        © Copyright Week-07: Tun Usaha, Database
+        &#xA9; Copyright Week-07: Tun Usaha, Database
     </div>
 </footer>
 
