@@ -34,16 +34,16 @@ class ShopController extends SearchableController
     }
 
     public function index(): View
-{
-    $search = $this->prepareSearch(request()->all());
-    $query = $this->search($search);
-    $shops = $query->paginate($this->getItemsPerPage())->appends($search);
+    {
+        $search = $this->prepareSearch(request()->all());
+        $query = $this->search($search);
+        $shops = $query->paginate($this->getItemsPerPage())->appends($search);
 
-    return $this->view($this->getListViewName(), [
-        'shops' => $shops,
-        'search' => $search
-    ]);
-}
+        return $this->view($this->getListViewName(), [
+            'shops' => $shops,
+            'search' => $search
+        ]);
+    }
 
     public function show(string $shop): View
     {
@@ -113,4 +113,3 @@ class ShopController extends SearchableController
         ], $data));
     }
 }
-

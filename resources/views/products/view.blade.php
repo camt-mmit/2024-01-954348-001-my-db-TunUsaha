@@ -6,10 +6,11 @@
     <div class="container">
         <h1 class="page-title">Product Details</h1>
 
-        @if(isset($product))
+        @if (isset($product))
             <div class="product-actions">
                 <a href="{{ route('products.edit-form', $product->code) }}" class="primary-button">Edit Product</a>
-                <form action="{{ route('products.delete', $product->code) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline;">
+                <form action="{{ route('products.delete', $product->code) }}" method="post"
+                    onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="delete-button">Delete Product</button>

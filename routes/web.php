@@ -21,7 +21,7 @@ Route::controller(ProductController::class)
         Route::delete('/{product}', 'delete')->name('delete');
     });
 
-    Route::controller(ShopController::class)
+Route::controller(ShopController::class)
     ->prefix('shops')
     ->name('shops.')
     ->group(static function () {
@@ -33,5 +33,3 @@ Route::controller(ProductController::class)
         Route::put('{shop}', 'update')->name('update');
         Route::delete('{shop}', 'delete')->name('delete');
     });
-
-

@@ -12,28 +12,30 @@
 <body>
     <header>
         <div class="container">
-            <h1>@section('title-container')@yield('title')@show</h1>
-            <nav>
-                <ul>
-                    <li><a href="{{ route('products.list') }}">Product</a></li>
-                    <li><a href="{{ route('shops.list') }}">Shop</a></li>
-                </ul>
-            </nav>
+            <h1>
+                @section('title-container')@yield('title')@show
+                </h1>
+                <nav>
+                    <ul>
+                        <li><a href="{{ route('products.list') }}">Product</a></li>
+                        <li><a href="{{ route('shops.list') }}">Shop</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <div class="container ">
+                @yield('content')
+            </div>
+        </main>
+
+
+    </body>
+    <footer>
+        <div class="container">
+            &#xA9; Copyright Week-07: Tun Usaha, Database
         </div>
-    </header>
+    </footer>
 
-    <main>
-        <div class="container ">
-            @yield('content')
-        </div>
-    </main>
-
-
-</body>
-<footer>
-    <div class="container">
-        &#xA9; Copyright Week-07: Tun Usaha, Database
-    </div>
-</footer>
-
-</html>
+    </html>
