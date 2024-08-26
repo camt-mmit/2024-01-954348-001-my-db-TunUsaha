@@ -8,6 +8,7 @@
 
         @if (isset($product))
             <div class="product-actions">
+                <a href="{{ route('products.view-shops', ['product' => $product->code]) }}" class="primary-button">Show Shops</a>
                 <a href="{{ route('products.edit-form', $product->code) }}" class="primary-button">Edit Product</a>
                 <form action="{{ route('products.delete', $product->code) }}" method="post"
                     onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline;">
@@ -22,7 +23,7 @@
                     <p class="text-3xl text-blue-600">{{ $product->name }}</p>
                     <p><strong>Code:</strong> {{ $product->code }}</p>
                     <p><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p>
-                    <p><strong>Description:</strong> {{ $product->description }}</p>
+                    <p><strong>Description:</strong> {!! nl2br(e($product->description)) !!}</p>
                 </div>
             </div>
 

@@ -62,13 +62,29 @@ class ProductController extends SearchableController
     public function list(Request $request): View
     {
         $search = $this->prepareSearch($request->query());
-        $query = $this->search($search);
+        $query = $this->search($search)->withCount('shops');
         $products = $query->paginate($this->getItemsPerPage())->appends($search);
         return $this->view($this->getListViewName(), [
             'search' => $search,
             'products' => $products,
         ]);
     }
+
+    // YourController.php
+    public function showShops(Request $request, ShopController $shopController, $productCode)
+    {
+        $product = Product::where('code', $productCode)->firstOrFail();
+        $search = $shopController->prepareSearch($request->query());
+        $query = $shopController->filter($product->shops(), $search);
+
+        return view('products.view-shops', [
+            'title' => "{$this->title} {$product->code} : Shop",
+            'product' => $product,
+            'search' => $search,
+            'shops' => $query->paginate(5),
+        ]);
+    }
+
 
     public function showEditForm(string $productCode): View
     {

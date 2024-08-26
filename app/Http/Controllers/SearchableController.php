@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -24,7 +25,7 @@ abstract class SearchableController extends Controller
         return $search;
     }
 
-    protected function filterByTermForProducts(Builder $query, ?string $term): Builder
+    protected function filterByTermForProducts(Builder|Relation $query, ?string $term): Builder|Relation
     {
         if (!empty($term)) {
             foreach (preg_split('/\s+/', trim($term)) as $word) {
@@ -38,7 +39,7 @@ abstract class SearchableController extends Controller
         return $query;
     }
 
-    protected function filterByTermForShops(Builder $query, ?string $term): Builder
+    protected function filterByTermForShops(Builder|Relation $query, ?string $term): Builder|Relation
     {
         if (!empty($term)) {
             foreach (preg_split('/\s+/', trim($term)) as $word) {
@@ -53,7 +54,7 @@ abstract class SearchableController extends Controller
         return $query;
     }
 
-    protected function filterByPrice(Builder $query, ?float $minPrice, ?float $maxPrice): Builder
+    protected function filterByPrice(Builder|Relation $query, ?float $minPrice, ?float $maxPrice): Builder|Relation
     {
         if ($minPrice !== null) {
             $query->where('price', '>=', $minPrice);
@@ -64,7 +65,7 @@ abstract class SearchableController extends Controller
         return $query;
     }
 
-    protected function filter(Builder $query, array $search, string $type = 'products'): Builder
+    protected function filter(Builder|Relation $query, array $search, string $type = 'products'): Builder|Relation
     {
         if ($type === 'products') {
             $query = $this->filterByTermForProducts($query, $search['term']);
@@ -75,7 +76,7 @@ abstract class SearchableController extends Controller
         return $query;
     }
 
-    protected function search(array $search): Builder
+    protected function search(array $search): Builder|Relation
     {
         $query = $this->getQuery();
         return $this->filter($query, $search, $this->getSearchType());
@@ -103,7 +104,7 @@ abstract class SearchableController extends Controller
         foreach ($items as $item) {
             $nameMatch = stripos($item['name'], $term) !== false;
             $codeMatch = stripos($item['code'], $term) !== false;
-            $ownerMatch = stripos($item['owner'], $term) !== false;
+            $ownerMatch = isset($item['owner']) && stripos($item['owner'], $term) !== false; // ตรวจสอบให้แน่ใจว่า 'owner' มีค่า
             if ($nameMatch || $codeMatch || $ownerMatch) {
                 $results[] = $item;
             }
@@ -115,8 +116,8 @@ abstract class SearchableController extends Controller
     {
         $results = [];
         foreach ($items as $item) {
-            if (($minPrice === null || $item['price'] >= $minPrice) &&
-                ($maxPrice === null || $item['price'] <= $maxPrice)
+            if (($minPrice === null || (isset($item['price']) && $item['price'] >= $minPrice)) &&
+                ($maxPrice === null || (isset($item['price']) && $item['price'] <= $maxPrice))
             ) {
                 $results[] = $item;
             }

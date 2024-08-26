@@ -22,7 +22,7 @@
                     <p><strong>Owner :</strong> {{ $shop->owner }}</p>
                     <p><strong>Location :</strong> {{ number_format($shop->latitude, 7) }},
                         {{ number_format($shop->longitude, 7) }}</p>
-                    <p><strong>Address :</strong> {{ $shop->address }}</p>
+                        <p><strong>Address :</strong> {!! nl2br(e($shop->address)) !!}</p>
                 </div>
             </div>
         </div>

@@ -19,6 +19,8 @@ Route::controller(ProductController::class)
         Route::get('/{product}/edit', 'showEditForm')->name('edit-form');
         Route::put('/{product}', 'update')->name('update');
         Route::delete('/{product}', 'delete')->name('delete');
+        Route::get('/{product}/shops', 'showShops')->name('view-shops');
+
     });
 
 Route::controller(ShopController::class)

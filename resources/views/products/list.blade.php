@@ -17,12 +17,12 @@
                 <div class="form-group">
                     <label for="app-inp-min-price">Min Price <span class="separator text-blue-600">::</span></label>
                     <input id="app-inp-min-price" type="number" name="minPrice" value="{{ $search['minPrice'] ?? '' }}"
-                        class="price-input" placeholder="-" />
+                        class="price-input" placeholder="$" />
                 </div>
                 <div class="form-group">
                     <label for="app-inp-max-price">Max Price <span class="separator text-blue-600">::</span></label>
                     <input id="app-inp-max-price" type="number" name="maxPrice" value="{{ $search['maxPrice'] ?? '' }}"
-                        class="price-input" placeholder="-" />
+                        class="price-input" placeholder="$" />
                 </div>
             </div>
             <div class="button-group">
@@ -40,6 +40,7 @@
                         <th>Code</th>
                         <th>Name</th>
                         <th>Price</th>
+                        <th>Shops</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +51,7 @@
                             </td>
                             <td>{{ $product->name }}</td>
                             <td>${{ number_format($product->price, 2) }}</td>
+                            <td>{{ $product->shops_count }}</td>
                         </tr>
                     @endforeach
                 </tbody>
