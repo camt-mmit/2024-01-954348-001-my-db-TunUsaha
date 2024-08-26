@@ -27,6 +27,8 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    -moz-appearance: textfield;
+    /* Firefox */
 }
 
 .container {
@@ -150,14 +152,17 @@ main {
     border-radius: 8px;
     background-color: #fff;
     width: 100%;
-    -moz-appearance: textfield; /* Firefox */
     margin-bottom: var(--form-spacing);
+    -moz-appearance: textfield;
+    /* Firefox */
 }
+
 .price-input::-webkit-inner-spin-button,
 .price-input::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 
 .button-group {
     display: flex;
@@ -211,6 +216,56 @@ main {
 
 .new-product-button:hover {
     background-color: #004499;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    transition: opacity 0.3s ease;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    opacity: 0.7;
+}
+
+.back-button svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--primary-color, #000);
+    transform: rotate(180deg);
+}
+.details-table {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    background-color: var(--secondary-color);
+    padding: 30px;
+    border-radius: 12px;
+}
+.details-table {
+    padding: 20px;
+    width: 100%;
+}
+
+.details-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px;
+}
+
+.details-container > * {
+    align-self: flex-start;
+    text-align: left;
+    width: 100%;
 }
 
 /* Table Styles */
@@ -426,3 +481,5 @@ footer .container {
   .btn:hover {
     background-color: RoyalBlue;
   }
+
+

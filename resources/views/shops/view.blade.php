@@ -14,8 +14,8 @@
                 <button type="submit" class="delete-button">Delete Shop</button>
             </form>
         </div>
-        <div class="search-form">
-            <div class="container">
+        <div class="details-table">
+            <div class="details-container">
                 <div class="details">
                     <p class="text-3xl text-blue-600">{{ $shop->name }}</p>
                     <p><strong>Code :</strong> {{ $shop->code }}</p>

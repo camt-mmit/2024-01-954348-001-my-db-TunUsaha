@@ -18,8 +18,8 @@
                 </form>
             </div>
 
-            <div class="search-form">
-                <div class="details">
+            <div class="details-table">
+                <div class="details-container">
                     <p class="text-3xl text-blue-600">{{ $product->name }}</p>
                     <p><strong>Code:</strong> {{ $product->code }}</p>
                     <p><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p>
