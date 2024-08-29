@@ -19,6 +19,7 @@
                     <ul>
                         <li><a href="{{ route('products.list') }}">Product</a></li>
                         <li><a href="{{ route('shops.list') }}">Shop</a></li>
+                        <li><a href="{{ route('categories.list') }}">Category</a></li>
                     </ul>
                 </nav>
             </div>
