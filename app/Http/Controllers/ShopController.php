@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ShopController extends SearchableController
 {
@@ -33,25 +34,39 @@ class ShopController extends SearchableController
         return 'shops.list';
     }
 
+    public function showProducts(Request $request, ProductController $productController, $shopCode)
+{
+    $shop = Shop::where('code', $shopCode)->firstOrFail();
+    $search = $productController->prepareSearch($request->query());
+    $query = $productController->filter($shop->products(), $search)->withCount('shops');
+
+    return view('shops.view-products', [
+        'title' => "{$this->title} {$shop->name} : Products",
+        'shop' => $shop,
+        'search' => $search,
+        'products' => $query->paginate(5),
+    ]);
+}
+
     public function index(): View
-    {
-        $search = $this->prepareSearch(request()->all());
-        $query = $this->search($search);
-        $shops = $query->paginate($this->getItemsPerPage())->appends($search);
+{
+    $search = $this->prepareSearch(request()->all());
+    $query = $this->search($search)->withCount('products');
+    $shops = $query->paginate($this->getItemsPerPage())->appends($search);
 
-        return $this->view($this->getListViewName(), [
-            'shops' => $shops,
-            'search' => $search
-        ]);
-    }
+    return $this->view($this->getListViewName(), [
+        'shops' => $shops,
+        'search' => $search
+    ]);
+}
 
-    public function show(string $shop): View
-    {
-        $shop = $this->find($shop);
-        return $this->view('shops.view', [
-            'shop' => $shop,
-        ]);
-    }
+public function show(string $shop): View
+{
+    $shop = $this->find($shop)->loadCount('products');
+    return $this->view('shops.view', [
+        'shop' => $shop,
+    ]);
+}
 
     public function showCreateForm(): View
     {
