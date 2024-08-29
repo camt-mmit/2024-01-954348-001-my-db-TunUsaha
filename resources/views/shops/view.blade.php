@@ -6,6 +6,7 @@
     <h1 class="page-title">Shop Details</h1>
     @if (isset($shop))
         <div class="product-actions">
+            <a href="{{ route('shops.view-products', ['shop' => $shop->code]) }}" class="primary-button">Show Products</a>
             <a href="{{ route('shops.edit-form', $shop->code) }}" class="primary-button">Edit Shop</a>
             <form action="{{ route('shops.delete', $shop->code) }}" method="post"
                 onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline;">
@@ -34,6 +35,6 @@
         <p class="no-products">No Shops Found</p>
         <div class="button-container">
             <a href="{{ route('shops.list') }}" class="new-product-button">Back to Shops List</a>
-        </div>">Back to Shops List</a>
+        </div>
     @endif
 @endsection

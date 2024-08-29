@@ -28,6 +28,7 @@
                         <th>Code</th>
                         <th>Name</th>
                         <th>Owner</th>
+                        <th>No. Of Products</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,7 @@
                             </td>
                             <td>{{ $shop->name }}</td>
                             <td>{{ $shop->owner }}</td>
+                            <td>{{ $shop->products_count }}</td>
                         </tr>
                     @endforeach
                 </tbody>

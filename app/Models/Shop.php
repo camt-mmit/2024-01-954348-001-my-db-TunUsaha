@@ -13,6 +13,7 @@ class Shop extends Model
 
     function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withTimestamps();
+        return $this->belongsToMany(Product::class)
+            ->withTimestamps();
     }
 }
