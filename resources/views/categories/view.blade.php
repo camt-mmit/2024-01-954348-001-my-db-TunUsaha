@@ -5,16 +5,23 @@
 @section('content')
     <h1 class="page-title">Category Details</h1>
     @if (isset($category))
-    <div class="product-actions">
-        <a href="{{ route('categories.view-products', ['category' => $category->code]) }}" class="primary-button">Show Products</a>
-        <a href="{{ route('categories.edit-form', $category->code) }}" class="primary-button">Edit Category</a>
-        <form action="{{ route('categories.delete', $category->code) }}" method="post"
-            onsubmit="return confirm('Are you sure you want to delete this category?');" style="display: inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="delete-button">Delete Category</button>
-        </form>
-    </div>
+        <div class="product-actions">
+            <a href="{{ route('categories.view-products', ['category' => $category->code]) }}" class="primary-button">Show
+                Products</a>
+            <a href="{{ route('categories.edit-form', $category->code) }}" class="primary-button">Edit Category</a>
+            <form id="deleteForm" action="{{ route('categories.delete', $category->code) }}" method="post" style="display: inline;">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="delete-button" onclick="showConfirmation()">Delete Category</button>
+            </form>
+            <div id="confirmationModal" class="modal">
+                <div class="modal-content">
+                    <p>Are you sure you want to delete this Category?</p>
+                    <button onclick="confirmDelete()">Yes, Delete</button>
+                    <button onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
         <div class="details-table">
             <div class="details-container">
                 <div class="details">

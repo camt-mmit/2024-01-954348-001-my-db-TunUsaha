@@ -7,6 +7,19 @@
     <title>@yield('title')</title>
     <link href="{{ asset('css/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+    <script>
+        function showConfirmation() {
+            document.getElementById('confirmationModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+
+        function confirmDelete() {
+            document.getElementById('deleteForm').submit();
+        }
+    </script>
 </head>
 
 <body>

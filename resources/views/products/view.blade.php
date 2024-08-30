@@ -8,14 +8,21 @@
 
         @if (isset($product))
             <div class="product-actions">
-                <a href="{{ route('products.view-shops', ['product' => $product->code]) }}" class="primary-button">Show Shops</a>
+                <a href="{{ route('products.view-shops', ['product' => $product->code]) }}" class="primary-button">Show
+                    Shops</a>
                 <a href="{{ route('products.edit-form', $product->code) }}" class="primary-button">Edit Product</a>
-                <form action="{{ route('products.delete', $product->code) }}" method="post"
-                    onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline;">
+                <form id="deleteForm" action="{{ route('products.delete', $product->code) }}" method="post" style="display: inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="delete-button">Delete Product</button>
+                    <button type="button" class="delete-button" onclick="showConfirmation()">Delete Product</button>
                 </form>
+            </div>
+            <div id="confirmationModal" class="modal">
+                <div class="modal-content">
+                    <p>Are you sure you want to delete this product?</p>
+                    <button onclick="confirmDelete()">Yes, Delete</button>
+                    <button onclick="closeModal()">Cancel</button>
+                </div>
             </div>
 
             <div class="details-table">

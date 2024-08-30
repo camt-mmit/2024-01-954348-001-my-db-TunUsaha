@@ -10,7 +10,7 @@
             </path>
         </svg>
     </a>
-    <h1 class="page-title">Category Details: {{ $category->name }}</h1>
+    <h1 class="page-title">Category {{ $category->code }}: {{ $category->name }}</h1>
     <form action="{{ route('products.list') }}" method="get" class="search-form">
         <div class="search-container">
             <label class="app-inp-search">
