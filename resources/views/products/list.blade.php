@@ -39,6 +39,7 @@
                     <tr>
                         <th>Code</th>
                         <th>Name</th>
+                        <th>Category</th>
                         <th>Price</th>
                         <th>Shops</th>
                     </tr>
@@ -50,6 +51,7 @@
                                 <a href="{{ route('products.view', $product->code) }}">{{ $product->code }}</a>
                             </td>
                             <td>{{ $product->name }}</td>
+                            <td>{{ $product->category->name }}</td>
                             <td>${{ number_format($product->price, 2) }}</td>
                             <td>{{ $product->shops_count }}</td>
                         </tr>

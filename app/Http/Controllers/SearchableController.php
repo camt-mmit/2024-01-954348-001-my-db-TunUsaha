@@ -54,6 +54,20 @@ abstract class SearchableController extends Controller
         return $query;
     }
 
+    protected function filterByTermForCategories(Builder|Relation $query, ?string $term): Builder|Relation
+    {
+        if (!empty($term)) {
+            foreach (preg_split('/\s+/', trim($term)) as $word) {
+                $query->where(function (Builder $innerQuery) use ($word): void {
+                    $innerQuery
+                        ->where('code', 'LIKE', '%' . $word . '%')
+                        ->orWhere('name', 'LIKE', '%' . $word . '%');
+                });
+            }
+        }
+        return $query;
+    }
+
     protected function filterByPrice(Builder|Relation $query, ?float $minPrice, ?float $maxPrice): Builder|Relation
     {
         if ($minPrice !== null) {
@@ -69,10 +83,12 @@ abstract class SearchableController extends Controller
     {
         if ($type === 'products') {
             $query = $this->filterByTermForProducts($query, $search['term']);
+            $query = $this->filterByPrice($query, $search['minPrice'], $search['maxPrice']);
         } else if ($type === 'shops') {
             $query = $this->filterByTermForShops($query, $search['term']);
+        } else if ($type === 'categories') {
+            $query = $this->filterByTermForCategories($query, $search['term']);
         }
-        $query = $this->filterByPrice($query, $search['minPrice'], $search['maxPrice']);
         return $query;
     }
 
@@ -104,7 +120,7 @@ abstract class SearchableController extends Controller
         foreach ($items as $item) {
             $nameMatch = stripos($item['name'], $term) !== false;
             $codeMatch = stripos($item['code'], $term) !== false;
-            $ownerMatch = isset($item['owner']) && stripos($item['owner'], $term) !== false; // ตรวจสอบให้แน่ใจว่า 'owner' มีค่า
+            $ownerMatch = isset($item['owner']) && stripos($item['owner'], $term) !== false;
             if ($nameMatch || $codeMatch || $ownerMatch) {
                 $results[] = $item;
             }
@@ -134,7 +150,9 @@ abstract class SearchableController extends Controller
         if ($term !== '') {
             $items = $this->filterArrayByTerm($items, $term);
         }
-        $items = $this->filterArrayByPrice($items, $minPrice, $maxPrice);
+        if ($this->getSearchType() === 'products') {
+            $items = $this->filterArrayByPrice($items, $minPrice, $maxPrice);
+        }
         return $items;
     }
 }
