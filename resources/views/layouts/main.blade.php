@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
     <link href="{{ asset('css/output.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ asset('icon/logo.svg') }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
     <script>
         function showConfirmation() {
