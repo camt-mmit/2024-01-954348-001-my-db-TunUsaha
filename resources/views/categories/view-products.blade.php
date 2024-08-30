@@ -65,10 +65,6 @@
     @else
         <p class="no-products">No Category Found</p>
     @endif
-
-    <div class="button-container">
-        <a href="{{ route('categories.list') }}" class="new-product-button">Back to Category List</a>
-    </div>
     <div class="pagination-container">
         {{ $products->links() }}
     </div>

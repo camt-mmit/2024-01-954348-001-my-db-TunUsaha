@@ -61,7 +61,6 @@ header h1 {
     font-weight: 600;
 }
 
-/* Navigation Styles */
 nav ul {
     list-style: none;
     display: flex;
@@ -79,13 +78,11 @@ nav ul li a {
 nav ul li a:hover {
     color: var(--primary-color);
 }
-
 /* Main Content Styles */
 main {
     flex-grow: 1;
     padding: 2.5rem 0;
 }
-
 .page-title {
     font-size: clamp(1.75rem, 5vw, 3rem);
     font-weight: 600;
@@ -102,6 +99,9 @@ main {
     background-color: var(--secondary-color);
     padding: 1.875rem;
     border-radius: 0.75rem;
+    width: 80%;
+    max-width: 1200rem;
+    margin: 0 auto;
 }
 
 .search-container {
@@ -130,7 +130,7 @@ main {
 .price-filter {
     display: flex;
     gap: 1.25rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     width: 100%;
     max-width: 37.5rem;
 }
@@ -138,7 +138,7 @@ main {
 .form-group {
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 80%;
     margin-bottom: var(--form-spacing);
 }
 
@@ -156,6 +156,7 @@ main {
     width: 100%;
     margin-bottom: var(--form-spacing);
     -moz-appearance: textfield;
+    /* Firefox */
 }
 
 .price-input::-webkit-inner-spin-button,
@@ -167,11 +168,11 @@ main {
 .button-group {
     display: flex;
     gap: 1.25rem;
-    margin-top: var(--form-spacing);
+    margin-top: 0rem;
 }
 
 .primary-button,
-.secondary-button {
+.secondary-button .go-back-button {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     border: none;
@@ -186,13 +187,13 @@ main {
 }
 
 .primary-button:hover {
-    background-color: var(--primary-hover-color);
+    background-color: #004499;
 }
 
 .secondary-button {
-    color: #ff3b30;
+    color: var(--primary-color);
     background-color: transparent;
-    border: 0.125rem solid #ff3b30;
+    border: 2px solid var(--primary-color);
     text-decoration: none;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
@@ -204,7 +205,7 @@ main {
 }
 
 .secondary-button::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -217,8 +218,9 @@ main {
 }
 
 .secondary-button:hover {
-    color: #f1f1f1;
+    border: 2px solid white;
     background-color: #ff3b30;
+    color: #fff;
 }
 
 .secondary-button:hover::before {
@@ -230,6 +232,27 @@ main {
     box-shadow: 0 0 0 0.125rem #ff3b30, 0 0 0 0.25rem rgba(255, 59, 48, 0.3);
 }
 
+.go-back-button {
+    color: var(--primary-color);
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+}
+
+.go-back-button:hover {
+    color: white;
+    background-color: var(--primary-color);
+    border: 2px solid white;
+}
+
 .new-product-button {
     display: inline-block;
     padding: 0.75rem 1.5rem;
@@ -239,12 +262,13 @@ main {
     border: none;
     border-radius: 0.5rem;
     text-decoration: none;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 2rem;
 }
 
 .new-product-button:hover {
-    background-color: var(--primary-hover-color);
+    background-color: #004499;
     transform: translateY(-0.125rem);
 }
 
@@ -271,6 +295,33 @@ main {
     fill: var(--primary-color, #000);
     transform: rotate(180deg);
 }
+.details-table {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    background-color: var(--secondary-color);
+    padding: 30px;
+    border-radius: 12px;
+}
+.details-table {
+    padding: 20px;
+    width: 100%;
+}
+
+.details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px;
+}
+
+.details-container > * {
+    align-self: flex-start;
+    text-align: left;
+    width: 100%;
+}
 
 /* Table Styles */
 .product-table {
@@ -278,10 +329,10 @@ main {
     border-collapse: separate;
     border-spacing: 0;
     background-color: #fff;
-    border-radius: 0.75rem;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.875rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 .product-table th,
@@ -378,6 +429,10 @@ footer .container {
         margin-bottom: 0.625rem;
     }
 
+    .page-title {
+        font-size: 2.25rem;
+    }
+
     .search-form {
         padding: 1.25rem;
     }
@@ -385,6 +440,10 @@ footer .container {
     .price-filter {
         flex-direction: column;
         gap: 0.625rem;
+    }
+
+    .form-group {
+        width: 100%;
     }
 
     .button-group {
@@ -417,27 +476,93 @@ footer .container {
     margin-bottom: 1.875rem;
 }
 
-.delete-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-    background-color: #dc3545;
-    color: #fff;
-}
-
 .delete-button:hover {
     background-color: #c82333;
     transform: translateY(-0.125rem);
+    color: white;
 }
 
 .delete-button:active {
     transform: scale(0.95);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease;
 }
 
-/* Modal Styles */
+/* effect on click of button */
+.bounce {
+    animation: bounce 0.3s forwards;
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+}
+
+/* Responsive adjustments for product actions */
+@media (max-width: 768px) {
+    .product-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .product-actions .primary-button,
+    .product-actions .delete-button {
+        width: 100%;
+    }
+}
+.delete-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.create-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    background-color: var(--secondary-color);
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.create-form input {
+    width: calc(100% - 1px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* Style buttons */
+.btn {
+    background-color: DodgerBlue; /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 16px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+    background-color: RoyalBlue;
+}
+
+/* style for modal */
 .modal {
     display: none;
     position: fixed;
@@ -452,39 +577,41 @@ footer .container {
 .modal-content {
     background-color: white;
     margin: 15% auto;
-    padding: 1.25rem;
-    border-radius: 0.5rem;
-    width: 18.75rem;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
     text-align: center;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .modal-content button {
-    padding: 0.625rem 1.25rem;
-    margin: 0.625rem;
+    padding: 10px 20px;
+    margin: 10px;
     border: none;
-    border-radius: 0.25rem;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease;
 }
 
-.modal-content button:first-child {
-    background-color: #dc3545;
+.modal-content button:nth-child(2) {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.modal-content button:nth-child(2):hover {
+    background-color: var(--primary-color);
     color: white;
-}
-
-.modal-content button:first-child:hover {
-    background-color: #c82333;
     transform: translateY(-0.125rem);
 }
 
 .modal-content button:last-child {
-    background-color: #6c757d;
-    color: white;
+    background-color: white;
+    color: #c82333;
 }
 
 .modal-content button:last-child:hover {
-    background-color: #5a6268;
+    background-color: #c82333;
+    color: white;
     transform: translateY(-0.125rem);
 }
 
@@ -504,7 +631,8 @@ footer .container {
         color: var(--text-color);
     }
 
-    header, footer {
+    header,
+    footer {
         background-color: var(--secondary-color);
         border-color: var(--border-color);
     }
@@ -526,45 +654,10 @@ footer .container {
     }
 }
 
-/* Accessibility Improvements */
-.primary-button:focus,
-.secondary-button:focus,
-.delete-button:focus,
-.back-button:focus,
-input:focus {
-    outline: 0.125rem solid var(--primary-color);
-    outline-offset: 0.125rem;
+.details p {
+    margin-bottom: 6px;
 }
 
-/* Additional responsive adjustments */
-@media (max-width: 30rem) {
-    .container {
-        padding: 0 0.625rem;
-    }
-
-    .product-table th,
-    .product-table td {
-        padding: 0.625rem;
-    }
-
-    .product-actions {
-        flex-direction: column;
-    }
-
-    .product-actions .primary-button,
-    .product-actions .delete-button {
-        width: 100%;
-    }
-}
-
-/* Performance optimizations */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    ::before,
-    ::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+.details-container p {
+    margin-bottom: 6px;
 }

@@ -34,13 +34,13 @@
                 </div>
             </div>
             <div class="button-container">
-                <a href="{{ route('shops.list') }}" class="new-product-button">Back to Shops List</a>
+                <a href="{{ route('shops.list') }}" class="go-back-button">Back to Shops List</a>
             </div>
         </div>
     @else
         <p class="no-products">No Shops Found</p>
         <div class="button-container">
-            <a href="{{ route('shops.list') }}" class="new-product-button">Back to Shops List</a>
+            <a href="{{ route('shops.list') }}" class="go-back-button">Back to Shops List</a>
         </div>
     @endif
 @endsection

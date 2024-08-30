@@ -30,7 +30,6 @@
                 <a href="{{ route('products.list') }}" class="secondary-button">Clear</a>
             </div>
         </form>
-
         <a href="{{ route('products.create-form') }}" class="new-product-button">New Product</a>
 
         @if (isset($products) && count($products) > 0)

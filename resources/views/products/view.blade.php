@@ -36,12 +36,12 @@
             </div>
 
             <div class="button-group" style="margin-top: 20px;">
-                <a href="{{ route('products.list') }}" class="secondary-button">Back to Products List</a>
+                <a href="{{ route('products.list') }}" class="go-back-button">Back to Products List</a>
             </div>
         @else
             <p class="no-products">No Products Found</p>
             <div class="button-group">
-                <a href="{{ route('products.list') }}" class="secondary-button">Back to Products List</a>
+                <a href="{{ route('products.list') }}" class="go-back-button">Back to Products List</a>
             </div>
         @endif
     </div>
