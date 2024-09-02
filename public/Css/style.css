@@ -7,12 +7,14 @@
 :root {
     --primary-color: #0066cc;
     --secondary-color: #f5f5f7;
+    --delete-color:#dc3545;
     --text-color: #1d1d1f;
     --light-text-color: #86868b;
     --border-color: #d2d2d7;
     --form-spacing: 1.25rem;
     --primary-hover-color: #004499;
     --secondary-hover-color: #e0e0e2;
+    --delete-hover-color:#c82333;
 }
 
 /* Global Styles */
@@ -468,7 +470,7 @@ footer .container {
     }
 }
 
-.no-products {
+.no-results {
     text-align: center;
     font-size: 1.125rem;
     color: var(--light-text-color);
@@ -569,6 +571,34 @@ footer .container {
     background-color: RoyalBlue;
 }
 
+.btn-icon {
+    background-color: transparent;
+    border: none;
+    color: var(--primary-color);
+    font-size: 20px;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-icon:hover {
+    color: var(--primary-hover-color);
+}
+
+.btn-icon-delete {
+    background-color: transparent;
+    border: none;
+    color: var(--delete-color);
+    font-size: 20px;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-icon-delete:hover {
+    color: var(--delete-hover-color);
+}
+
 /* style for modal */
 .modal {
     display: none;
@@ -667,4 +697,15 @@ footer .container {
 
 .details-container p {
     margin-bottom: 6px;
+}
+
+.Table-code {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.Table-code:hover {
+    text-decoration: underline;
+    color: var(--primary-hover-color);
 }

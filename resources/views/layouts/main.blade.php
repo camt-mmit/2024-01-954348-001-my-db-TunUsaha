@@ -7,6 +7,7 @@
     <title>@yield('title')</title>
     <link href="{{ asset('css/output.css') }}" rel="stylesheet">
     <link rel="icon" href="{{ asset('icon/logo.svg') }}" type="image/svg+xml">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
     <script>
         function showConfirmation() {
@@ -49,7 +50,7 @@
     </body>
     <footer>
         <div class="container">
-            &#xA9; Copyright Week-07: Tun Usaha, Database
+            &#xA9; Copyright: Tun Usaha 954348 Web Programming.
         </div>
     </footer>
 

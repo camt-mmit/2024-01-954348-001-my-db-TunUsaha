@@ -45,7 +45,7 @@
                 {{ $categories->links() }}
             </div>
         @else
-            <p class="no-categories">No categories found.</p>
+            <p class="no-results">No categories found.</p>
         @endif
     </div>
 @endsection

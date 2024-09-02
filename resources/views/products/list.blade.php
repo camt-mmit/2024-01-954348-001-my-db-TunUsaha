@@ -61,7 +61,7 @@
                 {{ $products->links() }}
             </div>
         @else
-            <p class="no-products">No products found.</p>
+            <p class="no-results">No products found.</p>
         @endif
     </div>
 @endsection

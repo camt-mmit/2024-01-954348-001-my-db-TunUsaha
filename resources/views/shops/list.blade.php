@@ -48,7 +48,7 @@
                 {{ $shops->links() }}
             </div>
         @else
-            <p class="no-products">No shops found.</p>
+            <p class="no-results">No shops found.</p>
         @endif
     </div>
 @endsection

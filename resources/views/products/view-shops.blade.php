@@ -35,6 +35,7 @@
                         <th>Code</th>
                         <th>Name</th>
                         <th>Owner</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +46,10 @@
                             </td>
                             <td>{{ $shop->name }}</td>
                             <td>{{ $shop->owner }}</td>
+                            <td><a href="{{ route('products.add-shops-form', ['product' => $product->code,]) }}" ><i class="fas fa-plus"></i></a></td>
+                            <td>
+                                <a href="{{ route('products.remove-shop', [ 'product' => $product->code,'shop' => $shop->code,]) }}"><i class="fas fa-trash"></i></a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -53,7 +58,7 @@
                 {{ $shops->links() }}
             </div>
         @else
-            <p class="no-products">No shops found.</p>
+            <p class="no-results">No shops found.</p>
         @endif
     </div>
 @endsection

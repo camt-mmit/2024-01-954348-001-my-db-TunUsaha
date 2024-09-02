@@ -38,7 +38,7 @@
             </div>
         </div>
     @else
-        <p class="no-products">No Shops Found</p>
+        <p class="no-results">No Shops Found</p>
         <div class="button-container">
             <a href="{{ route('shops.list') }}" class="go-back-button">Back to Shops List</a>
         </div>

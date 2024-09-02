@@ -62,7 +62,7 @@
             <p>No products found in this category.</p>
         @endif
     @else
-        <p class="no-products">No Category Found</p>
+        <p class="no-results">No Category Found</p>
     @endif
     <div class="pagination-container">
         {{ $products->links() }}
