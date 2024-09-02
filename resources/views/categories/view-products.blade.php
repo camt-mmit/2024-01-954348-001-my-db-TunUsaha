@@ -33,11 +33,10 @@
         </div>
         <div class="button-group">
             <button type="submit" class="primary-button">Search</button>
-            <a href="{{ route('products.list') }}" class="secondary-button">Clear</a>
+            <a href="{{ route('categories.view-products', ['category' => $category->code]) }}" class="secondary-button">Clear</a>
         </div>
     </form>
     @if (isset($category))
-        <h2>Products in this Category</h2>
         @if ($products->count() > 0)
             <table class="product-table">
                 <thead>
