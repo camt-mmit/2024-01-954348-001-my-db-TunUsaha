@@ -27,7 +27,7 @@
             </div>
         </form>
 
-        <a href="{{ route('shops.create-form') }}" class="new-product-button">New Shop</a>
+        <a href="{{ route('products.add-shops-form', ['product' => $product->code]) }}" class="new-product-button"><i class="fas fa-plus"></i>  Shops</a>
         @if (isset($shops) && count($shops) > 0)
             <table class="product-table">
                 <thead>
