@@ -46,7 +46,6 @@
                             </td>
                             <td>{{ $shop->name }}</td>
                             <td>{{ $shop->owner }}</td>
-                            <td><a href="{{ route('products.add-shops-form', ['product' => $product->code,]) }}" ><i class="fas fa-plus"></i></a></td>
                             <td>
                                 <a href="{{ route('products.remove-shop', [ 'product' => $product->code,'shop' => $shop->code,]) }}"><i class="fas fa-trash"></i></a>
                             </td>
