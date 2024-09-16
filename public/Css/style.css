@@ -149,6 +149,24 @@ main {
     white-space: nowrap;
 }
 
+/* Style the select element */
+select {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    color: #000;
+    width: 1000px;
+    height: 2.5rem;
+    background-color: #fff;
+}
+
+/* Optional: Focus state for better user experience */
+select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
 .price-input {
     padding: 0.75rem 1.25rem;
     font-size: 1rem;

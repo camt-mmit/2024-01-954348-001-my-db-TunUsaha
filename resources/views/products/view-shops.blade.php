@@ -16,8 +16,7 @@
             <div class="search-container">
                 <label class="app-inp-search">
                     Search
-                    <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input"
-                        placeholder="Search by code, name, or owner" />
+                    <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input"placeholder="Search by code, name, or owner" />
                 </label>
             </div>
             <div class="button-group">
@@ -27,7 +26,7 @@
             </div>
         </form>
 
-        <a href="{{ route('shops.create-form') }}" class="new-product-button">New Shop</a>
+        <a href="{{ route('products.add-shops-form', ['product' => $product->code]) }}" class="new-product-button"><i class="fas fa-plus"></i>  Shops</a>
         @if (isset($shops) && count($shops) > 0)
             <table class="product-table">
                 <thead>

@@ -12,7 +12,7 @@
 </a>
     <div class="content-wrapper">
         <h1 class="page-title">Shops List</h1>
-        <form action="{{ route('shops.list') }}" method="get" class="search-form">
+        <form action="{{ route('products.add-shops-form', ['product' => $product->code]) }}" method="get" class="search-form">
             <div class="search-container">
                 <label class="app-inp-search">
                     Search
@@ -22,7 +22,8 @@
             </div>
             <div class="button-group">
                 <button type="submit" class="primary-button">Search</button>
-                <a href="{{ route('shops.list') }}" class="secondary-button">Clear</a>
+                <a href="{{ route('products.add-shops-form', ['product' => $product->code]) }}"
+                    class="secondary-button">Clear</a>
             </div>
         </form>
 

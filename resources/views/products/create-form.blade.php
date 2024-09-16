@@ -24,6 +24,18 @@
             </div>
 
             <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="" >-- Please select a category --</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">
+                            [{{ $category->code }}] {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="price">Price</label>
                 <input type="number" id="price" step="any" name="price" required>
             </div>

@@ -37,13 +37,17 @@ Route::controller(ShopController::class)
         Route::get('', 'index')->name('list');
         Route::get('/create', 'showCreateForm')->name('create-form');
         Route::post('/create', 'create')->name('create');
-
         Route::get('/{shop}', 'show')->name('view');
         Route::get('/{shop}/edit', 'showEditForm')->name('edit-form');
         Route::put('/{shop}', 'update')->name('update');
         Route::delete('/{shop}', 'delete')->name('delete');
-
-        Route::get('/{shop}/products', 'showProducts')->name('view-products');
+        Route::prefix('/{shop}/products')->group(static function () {
+            Route::get('', 'showProducts')->name('view-products');
+            Route::get('/add', 'showAddProductsForm')->name('add-products-form');
+            Route::post('/add', 'addProduct')->name('add-product');
+            Route::get('/{product}/remove', 'removeProduct')
+                ->name('remove-product');
+        });
     });
 
 Route::controller(CategoriesController::class)
@@ -58,6 +62,11 @@ Route::controller(CategoriesController::class)
         Route::get('/{category}/edit', 'showEditForm')->name('edit-form');
         Route::put('/{category}', 'update')->name('update');
         Route::delete('/{category}', 'delete')->name('delete');
-
-        Route::get('/{category}/products', 'showProducts')->name('view-products');
+        Route::prefix('/{category}/products')->group(static function () {
+            Route::get('', 'showProducts')->name('view-products');
+            Route::get('/add', 'showAddProductsForm')->name('add-products-form');
+            Route::post('/add', 'addProduct')->name('add-product');
+            Route::get('/{product}/remove', 'removeProduct')
+                ->name('remove-product');
+        });
     });

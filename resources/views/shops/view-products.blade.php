@@ -36,16 +36,16 @@
             </div>
         </form>
 
-        <a href="{{ route('products.create-form') }}" class="new-product-button">New Product</a>
-
+        <a href="{{ route('shops.add-products-form', ['shop' => $shop->code]) }}" class="new-product-button"><i class="fas fa-plus"></i>  Products</a>
         @if (isset($products) && count($products) > 0)
             <table class="product-table">
                 <thead>
                     <tr>
                         <th>Code</th>
                         <th>Name</th>
+                        <th>Category</th>
                         <th>Price</th>
-                        <th>Shops</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,8 +55,11 @@
                                 <a href="{{ route('products.view', $product->code) }}">{{ $product->code }}</a>
                             </td>
                             <td>{{ $product->name }}</td>
+                            <td>{{ $product->category->name }}</td>
                             <td>${{ number_format($product->price, 2) }}</td>
-                            <td>{{ $product->shops_count }}</td>
+                            <td>
+                                <a href="{{ route('shops.remove-product', [ 'shop' => $shop->code,'product' => $product->code,]) }}"><i class="fas fa-trash"></i></a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

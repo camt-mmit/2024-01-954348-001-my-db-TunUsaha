@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Shop extends Model
 {
     use HasFactory;
+
     protected $fillable = ['code', 'name', 'owner', 'longitude', 'latitude', 'address'];
 
-    function products(): BelongsToMany
+    public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)
-            ->withTimestamps();
+        return $this->belongsToMany(Product::class)->withTimestamps();
     }
 }
+

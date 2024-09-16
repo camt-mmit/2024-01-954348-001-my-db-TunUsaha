@@ -32,27 +32,31 @@ abstract class SearchableController extends Controller
                 $query->where(function (Builder $innerQuery) use ($word): void {
                     $innerQuery
                         ->where('code', 'LIKE', '%' . $word . '%')
-                        ->orWhere('name', 'LIKE', '%' . $word . '%');
+                        ->orWhere('name', 'LIKE', '%' . $word . '%')
+                        ->orWhereHas('category', function (Builder $categoryQuery) use ($word) {
+                            $categoryQuery->where('name', 'LIKE', '%' . $word . '%');
+                        });
                 });
             }
         }
         return $query;
     }
 
+
     protected function filterByTermForShops(Builder|Relation $query, ?string $term): Builder|Relation
-    {
-        if (!empty($term)) {
-            foreach (preg_split('/\s+/', trim($term)) as $word) {
-                $query->where(function (Builder $innerQuery) use ($word): void {
-                    $innerQuery
-                        ->where('code', 'LIKE', '%' . $word . '%')
-                        ->orWhere('name', 'LIKE', '%' . $word . '%')
-                        ->orWhere('owner', 'LIKE', '%' . $word . '%');
-                });
-            }
+{
+    if (!empty($term)) {
+        foreach (preg_split('/\s+/', trim($term)) as $word) {
+            $query->where(function (Builder $innerQuery) use ($word): void {
+                $innerQuery
+                    ->where('code', 'LIKE', '%' . $word . '%')
+                    ->orWhere('name', 'LIKE', '%' . $word . '%')
+                    ->orWhere('owner', 'LIKE', '%' . $word . '%');
+            });
         }
-        return $query;
     }
+    return $query;
+}
 
     protected function filterByTermForCategories(Builder|Relation $query, ?string $term): Builder|Relation
     {
@@ -97,6 +101,7 @@ abstract class SearchableController extends Controller
         $query = $this->getQuery();
         return $this->filter($query, $search, $this->getSearchType());
     }
+
 
     public function find(string $code): Model
     {

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Psr\Http\Message\ServerRequestInterface;
+use App\Models\Product;
 
 class CategoriesController extends SearchableController
 {
@@ -119,5 +121,50 @@ class CategoriesController extends SearchableController
         return view($view, array_merge([
             'title' => $title,
         ], $data));
+    }
+
+    public function showAddProductsForm(
+        ServerRequestInterface $request,
+        ProductController $productController,
+        string $categoryCode
+    ): View {
+        $category = $this->find($categoryCode);
+
+        $query = Product::orderBy('code')
+            ->whereDoesntHave('category', function (Builder $innerQuery) use ($category) {
+                return $innerQuery->where('code', $category->code);
+            });
+
+        $search = $productController->prepareSearch($request->getQueryParams());
+        $query = $productController->filter($query, $search);
+
+        return view('categories.add-products-form', [
+            'title' => "{$this->title} {$category->code} : Add Products",
+            'search' => $search,
+            'category' => $category,
+            'products' => $query->paginate(4),
+        ]);
+    }
+
+    function addProduct(ServerRequestInterface $request, string $categoryCode): RedirectResponse
+    {
+        $category = $this->find($categoryCode);
+        $data = $request->getParsedBody();
+        $product = Product::whereDoesntHave('shops', function (Builder $innerQuery) use ($category) {
+            return $innerQuery->where('code', $category->code);
+        })->where('code', $data['product'])->firstOrFail();
+        $category->products()->attach($product);
+        return redirect()->back();
+    }
+
+    function removeProduct(string $categoryCode, string $productCode): RedirectResponse
+    {
+        $category = $this->find($categoryCode);
+        $product = $category->products()
+            ->where('code', $productCode)
+            ->firstOrFail();
+
+        $category->products()->detach($product);
+        return redirect()->back();
     }
 }
