@@ -41,7 +41,7 @@
         @else
             <p class="no-results">No Products Found</p>
             <div class="button-group">
-                <a href="{{ route('products.list') }}" class="go-back-button">Back to Products List</a>
+                <a href="{{session()->get('bookmark.products.view', route('products.list'))}}" class="go-back-button">Back to Products List</a>
             </div>
         @endif
     </div>

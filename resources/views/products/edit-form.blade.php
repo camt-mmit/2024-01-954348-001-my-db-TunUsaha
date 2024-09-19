@@ -23,10 +23,10 @@
 
             <div class="form-group">
                 <label for="category">Category</label>
-                <select id="category" name="category">
-                    <option value="" >-- Please select a category --</option>
+                <select id="category" name="category_id">
+                    <option value="">-- Please select a category --</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">
+                        <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
                             [{{ $category->code }}] {{ $category->name }}
                         </option>
                     @endforeach

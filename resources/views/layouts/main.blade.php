@@ -40,6 +40,12 @@
             </div>
         </header>
 
+        @session('status')
+            <div class="status_session">
+                <span class="app-cl-info">{{ $value }}</span>
+            </div>
+        @endsession
+
         <main>
             <div class="container ">
                 @yield('content')

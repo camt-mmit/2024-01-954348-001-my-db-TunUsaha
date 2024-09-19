@@ -727,3 +727,23 @@ footer .container {
     text-decoration: underline;
     color: var(--primary-hover-color);
 }
+
+.status_session {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.status_session:hover {
+    background-color: var(--secondary-hover-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+}

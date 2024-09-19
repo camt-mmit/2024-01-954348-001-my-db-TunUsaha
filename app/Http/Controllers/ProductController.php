@@ -51,75 +51,87 @@ class ProductController extends SearchableController
         return view('products.create-form', compact('categories', 'title'));
     }
 
-
-
-    public function create(Request $request): RedirectResponse
-    {
-        $validatedData = $request->validate([
-            'code' => 'required|unique:products',
-            'name' => 'required',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required',
-        ]);
-
-        Product::create($validatedData);
-        return redirect()->route('products.list')->with('success', 'Product created successfully.');
-    }
-
     public function list(Request $request): View
-{
-    $search = $this->prepareSearch($request->query());
-    $query = $this->search($search)->withCount('shops');
-    $products = $query->paginate($this->getItemsPerPage())->appends($search);
+    {
+        $search = $this->prepareSearch($request->query());
+        $query = $this->search($search)->withCount('shops');
+        $products = $query->paginate($this->getItemsPerPage())->appends($search);
 
-    return $this->view($this->getListViewName(), [
-        'search' => $search,
-        'products' => $products,
-    ]);
-}
+        return $this->view($this->getListViewName(), [
+            'search' => $search,
+            'products' => $products,
+        ]);
+    }
 
 
     public function showShops(Request $request, ShopController $shopController, $productCode)
-{
-    $product = Product::where('code', $productCode)->firstOrFail();
-    $search = $shopController->prepareSearch($request->query());
-    $query = $shopController->filter($product->shops(), $search, 'shops');
+    {
+        $product = Product::where('code', $productCode)->firstOrFail();
+        $search = $shopController->prepareSearch($request->query());
+        $query = $shopController->filter($product->shops(), $search, 'shops');
 
-    return view('products.view-shops', [
-        'title' => "{$this->title} {$product->code} : Shop",
-        'product' => $product,
-        'search' => $search,
-        'shops' => $query->paginate(5),
-    ]);
-}
+        return view('products.view-shops', [
+            'title' => "{$this->title} {$product->code} : Shop",
+            'product' => $product,
+            'search' => $search,
+            'shops' => $query->paginate(5),
+        ]);
+    }
 
 
     public function showEditForm(string $productCode): View
-    {
-        $product = $this->find($productCode);
-        return $this->view('products.edit-form', [
-            'product' => $product,
-        ]);
-    }
+{
+    $product = $this->find($productCode);
+    $categories = Category::all();
+    $title = "Edit Product: " . $product->name;
 
-    public function update(Request $request, string $productCode): RedirectResponse
-    {
-        $product = $this->find($productCode);
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required',
-        ]);
+    return view('products.edit-form', compact('product', 'categories', 'title'));
+}
 
-        $product->update($validatedData);
-        return redirect()->route('products.view', $product->code)->with('success', 'Product updated successfully.');
-    }
+
+    public function create(Request $request): RedirectResponse
+{
+    $validatedData = $request->validate([
+        'code' => 'required|unique:products',
+        'name' => 'required',
+        'category_id' => 'required|exists:categories,id',
+        'price' => 'required|numeric|min:0',
+        'description' => 'required',
+    ]);
+
+    $product = Product::create($validatedData);
+    return redirect()
+        ->route('products.list')
+        ->with('status', "Product {$product->code} was created.");
+}
+
+
+public function update(Request $request, string $productCode): RedirectResponse
+{
+
+    $validatedData = $request->validate([
+        'code' => 'required|string|unique:products,code,' . $productCode . ',code',
+        'name' => 'required|string|max:255',
+        'category_id' => 'required|exists:categories,id',
+        'price' => 'required|numeric',
+        'description' => 'nullable|string',
+    ]);
+
+    $product = Product::where('code', $productCode)->firstOrFail();
+    $product->update($validatedData);
+
+    return redirect()
+    ->route('products.list')
+    ->with('status', "Product {$product->code} was updated.");
+}
 
     public function delete(string $productCode): RedirectResponse
     {
         $product = $this->find($productCode);
         $product->delete();
-        return redirect()->route('products.list')->with('success', 'Product deleted successfully.');
+        return redirect(
+            session()->get('bookmark.products.view', route('products.list'))
+            )->with('status', "Product {$product->code} was deleted.");
     }
 
     protected function view(string $view, array $data = [], string $customTitle = null): View

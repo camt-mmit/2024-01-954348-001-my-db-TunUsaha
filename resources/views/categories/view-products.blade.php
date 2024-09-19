@@ -52,6 +52,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        session()->put('bookmark.products.view', url()->full());
+                    @endphp
                     @foreach ($products as $product)
                         <tr>
                             <td>

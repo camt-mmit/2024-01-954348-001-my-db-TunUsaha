@@ -44,13 +44,20 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        session()->put('bookmark.products.view', url()->full());
+                    @endphp
                     @foreach ($products as $product)
                         <tr>
                             <td>
                                 <a href="{{ route('products.view', $product->code) }}">{{ $product->code }}</a>
                             </td>
                             <td>{{ $product->name }}</td>
-                            <td>{{ $product->category->name }}</td>
+                            <td>
+                            <a href="{{ $product->category ? route('categories.view', ['category' => $product->category->code]) : '#' }}">
+                                {{ $product->category ? $product->category->name : 'No Category' }}
+                            </a>
+                            </td>
                             <td>${{ number_format($product->price, 2) }}</td>
                             <td>{{ $product->shops_count }}</td>
                         </tr>
