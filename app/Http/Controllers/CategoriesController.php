@@ -55,6 +55,8 @@ class CategoriesController extends SearchableController
         $query = $this->search($search)->withCount('products');
         $categories = $query->paginate($this->getItemsPerPage())->appends($search);
 
+        session()->put('bookmark.categories.list', url()->current());
+
         return $this->view($this->getListViewName(), [
             'categories' => $categories,
             'search' => $search
@@ -62,12 +64,16 @@ class CategoriesController extends SearchableController
     }
 
     public function show(string $category): View
-{
-    $category = $this->find($category)->loadCount('products');
-    return $this->view('categories.view', [
-        'category' => $category,
-    ]);
-}
+    {
+        $category = $this->find($category)->loadCount('products');
+
+        session()->put('bookmark.categories.view', url()->current());
+
+        return $this->view('categories.view', [
+            'category' => $category,
+        ]);
+    }
+
 
     public function showCreateForm(): View
     {
@@ -82,8 +88,10 @@ class CategoriesController extends SearchableController
             'description' => 'nullable',
         ]);
 
-        Category::create($validatedData);
-        return redirect()->route('categories.list')->with('success', 'Category created successfully.');
+        $category = Category::create($validatedData);
+        return redirect()
+            ->route('categories.list')
+            ->with('status', "Category {$category->code} was created.");
     }
 
     public function showEditForm(string $category): View
@@ -104,15 +112,18 @@ class CategoriesController extends SearchableController
         ]);
 
         $category->update($validatedData);
-
-        return redirect()->route('categories.view', $category->code)->with('success', 'Category updated successfully.');
+        return redirect()
+            ->route('categories.list')
+            ->with('status', "Category {$category->code} was updated.");
     }
 
     public function delete(string $category): RedirectResponse
     {
         $category = $this->find($category);
         $category->delete();
-        return redirect()->route('categories.list')->with('success', 'Category deleted successfully.');
+        return redirect(
+            session()->get('categories.view', route('categories.list'))
+        )->with('status', "Category {$category->code} was deleted.");
     }
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
@@ -154,7 +165,9 @@ class CategoriesController extends SearchableController
             return $innerQuery->where('code', $category->code);
         })->where('code', $data['product'])->firstOrFail();
         $category->products()->attach($product);
-        return redirect()->back();
+        return redirect()
+            ->route('categories.add-product', ['category' => $categoryCode])
+            ->with('status', "Product {$product->code} was added to Shop {$category->code}.");
     }
 
     function removeProduct(string $categoryCode, string $productCode): RedirectResponse
@@ -165,6 +178,8 @@ class CategoriesController extends SearchableController
             ->firstOrFail();
 
         $category->products()->detach($product);
-        return redirect()->back();
+        return redirect()
+            ->back()
+            ->with('status', "Product {$product->code} was removed from Category {$category->code}.");
     }
 }

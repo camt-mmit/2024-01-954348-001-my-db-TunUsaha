@@ -40,7 +40,8 @@
     @else
         <p class="no-results">No Shops Found</p>
         <div class="button-container">
-            <a href="{{ route('shops.list') }}" class="go-back-button">Back to Shops List</a>
+            <a href="{{ session('bookmark.shops.view', route('shops.list')) }}" class="go-back-button">Back to Shops List</a>
         </div>
+
     @endif
 @endsection

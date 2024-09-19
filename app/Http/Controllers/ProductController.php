@@ -53,6 +53,8 @@ class ProductController extends SearchableController
 
     public function list(Request $request): View
     {
+        session()->put('bookmark.products.list', url()->current());
+
         $search = $this->prepareSearch($request->query());
         $query = $this->search($search)->withCount('shops');
         $products = $query->paginate($this->getItemsPerPage())->appends($search);
@@ -64,11 +66,14 @@ class ProductController extends SearchableController
     }
 
 
+
     public function showShops(Request $request, ShopController $shopController, $productCode)
     {
         $product = Product::where('code', $productCode)->firstOrFail();
         $search = $shopController->prepareSearch($request->query());
         $query = $shopController->filter($product->shops(), $search, 'shops');
+
+        session()->put('bookmark.products.view-shops', url()->current());
 
         return view('products.view-shops', [
             'title' => "{$this->title} {$product->code} : Shop",
@@ -79,51 +84,52 @@ class ProductController extends SearchableController
     }
 
 
-    public function showEditForm(string $productCode): View
-{
-    $product = $this->find($productCode);
-    $categories = Category::all();
-    $title = "Edit Product: " . $product->name;
 
-    return view('products.edit-form', compact('product', 'categories', 'title'));
-}
+    public function showEditForm(string $productCode): View
+    {
+        $product = $this->find($productCode);
+        $categories = Category::all();
+        $title = "Edit Product: " . $product->name;
+
+        return view('products.edit-form', compact('product', 'categories', 'title'));
+    }
 
 
     public function create(Request $request): RedirectResponse
-{
-    $validatedData = $request->validate([
-        'code' => 'required|unique:products',
-        'name' => 'required',
-        'category_id' => 'required|exists:categories,id',
-        'price' => 'required|numeric|min:0',
-        'description' => 'required',
-    ]);
+    {
+        $validatedData = $request->validate([
+            'code' => 'required|unique:products',
+            'name' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'description' => 'required',
+        ]);
 
-    $product = Product::create($validatedData);
-    return redirect()
-        ->route('products.list')
-        ->with('status', "Product {$product->code} was created.");
-}
+        $product = Product::create($validatedData);
+        return redirect()
+            ->route('products.list')
+            ->with('status', "Product {$product->code} was created.");
+    }
 
 
-public function update(Request $request, string $productCode): RedirectResponse
-{
+    public function update(Request $request, string $productCode): RedirectResponse
+    {
 
-    $validatedData = $request->validate([
-        'code' => 'required|string|unique:products,code,' . $productCode . ',code',
-        'name' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'price' => 'required|numeric',
-        'description' => 'nullable|string',
-    ]);
+        $validatedData = $request->validate([
+            'code' => 'required|string|unique:products,code,' . $productCode . ',code',
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric',
+            'description' => 'nullable|string',
+        ]);
 
-    $product = Product::where('code', $productCode)->firstOrFail();
-    $product->update($validatedData);
+        $product = Product::where('code', $productCode)->firstOrFail();
+        $product->update($validatedData);
 
-    return redirect()
-    ->route('products.list')
-    ->with('status', "Product {$product->code} was updated.");
-}
+        return redirect()
+            ->route('products.list')
+            ->with('status', "Product {$product->code} was updated.");
+    }
 
     public function delete(string $productCode): RedirectResponse
     {
@@ -131,7 +137,7 @@ public function update(Request $request, string $productCode): RedirectResponse
         $product->delete();
         return redirect(
             session()->get('bookmark.products.view', route('products.list'))
-            )->with('status', "Product {$product->code} was deleted.");
+        )->with('status', "Product {$product->code} was deleted.");
     }
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
@@ -162,6 +168,8 @@ public function update(Request $request, string $productCode): RedirectResponse
         $search = $shopController->prepareSearch($request->getQueryParams());
         $query = $shopController->filter($query, $search, 'shops');
 
+        session()->put('bookmark.products.add-shops-form', url()->current());
+
         return view('products.add-shops-form', [
             'title' => "{$this->title} {$product->code} : Add Shops",
             'search' => $search,
@@ -169,6 +177,7 @@ public function update(Request $request, string $productCode): RedirectResponse
             'shops' => $query->paginate(5),
         ]);
     }
+
     function addShop(ServerRequestInterface $request, string $productCode): RedirectResponse
     {
         $product = $this->find($productCode);
@@ -177,7 +186,9 @@ public function update(Request $request, string $productCode): RedirectResponse
             return $innerQuery->where('code', $product->code);
         })->where('code', $data['shop'])->firstOrFail();
         $product->shops()->attach($shop);
-        return redirect()->back();
+        return redirect()
+            ->route('products.add-shop', ['product' => $productCode])
+            ->with('status', "Shop {$shop->code} was added to Product {$product->code}.");
     }
 
     function removeShop(
@@ -189,6 +200,8 @@ public function update(Request $request, string $productCode): RedirectResponse
             ->where('code', $shopCode)
             ->firstOrFail();
         $product->shops()->detach($shop);
-        return redirect()->back();
+        return redirect()
+            ->back()
+            ->with('status', "Shop {$shop->code} was removed from Product {$product->code}.");
     }
 }

@@ -38,7 +38,7 @@
     @else
         <p class="no-results">No Category Found</p>
         <div class="button-container">
-            <a href="{{ route('categories.list') }}" class="go-back-button">Back to Categories List</a>
+            <a href="{{ session('bookmark.categories.view', route('categories.list')) }}" class="go-back-button">Back to Category List</a>
         </div>
     @endif
 @endsection
