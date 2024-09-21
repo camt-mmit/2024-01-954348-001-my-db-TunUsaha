@@ -16,6 +16,11 @@ class CategoryPolicy
     }
 
     // in class body
+    function create(User $user): bool
+    {
+        // Same as update policy, we consider create is a special case of update.
+        return $this->update($user);
+    }
 function update(User $user): bool {
     return $user->isAdministrator();
     }

@@ -18,8 +18,9 @@
                 <a href="{{ route('categories.list') }}" class="secondary-button">Clear</a>
             </div>
         </form>
-
+        @can('create', \App\Models\category::class)
         <a href="{{ route('categories.create-form') }}" class="new-product-button">New Category</a>
+        @endcan
         @if (isset($categories) && count($categories) > 0)
             <table class="category-table">
                 <thead>

@@ -8,7 +8,9 @@
         <div class="product-actions">
             <a href="{{ route('categories.view-products', ['category' => $category->code]) }}" class="primary-button">Show
                 Products</a>
+            @can('update', \App\Models\category::class)
             <a href="{{ route('categories.edit-form', $category->code) }}" class="primary-button">Edit Category</a>
+            @endcan
             <form id="deleteForm" action="{{ route('categories.delete', $category->code) }}" method="post" style="display: inline;">
                 @csrf
                 @method('DELETE')

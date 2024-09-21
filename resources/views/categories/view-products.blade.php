@@ -37,8 +37,10 @@
                 class="secondary-button">Clear</a>
         </div>
     </form>
+    @can('update', \App\Models\category::class)
     <a href="{{ route('categories.add-products-form', ['category' => $category->code]) }}" class="new-product-button"><i
             class="fas fa-plus"></i> Products</a>
+    @endcan
     @if (isset($category))
         @if (isset($products) && count($products) > 0)
             <table class="product-table">
@@ -48,7 +50,9 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Price</th>
+                        @can('update', \App\Models\Category::class)
                         <th>Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -63,11 +67,13 @@
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->category->name }}</td>
                             <td>${{ number_format($product->price, 2) }}</td>
+                            @can('update', \App\Models\Category::class)
                             <td>
                                 <a
                                     href="{{ route('categories.remove-product', ['category' => $category->code, 'product' => $product->code]) }}"><i
                                         class="fas fa-trash"></i></a>
                             </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>
