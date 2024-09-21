@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use Psr\Http\Message\ServerRequestInterface;
 use App\Models\Category;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends SearchableController
 {
@@ -46,6 +47,7 @@ class ProductController extends SearchableController
 
     public function showCreateForm(): View
     {
+        Gate::authorize('create', Product::class); // Authorization check
         $categories = Category::all();
         $title = 'Create New Product';
         return view('products.create-form', compact('categories', 'title'));
@@ -85,8 +87,10 @@ class ProductController extends SearchableController
 
 
 
-    public function showEditForm(string $productCode): View
+    function showEditForm(string $productCode): View
     {
+        Gate::authorize('update', Product::class); // Authorization check
+
         $product = $this->find($productCode);
         $categories = Category::all();
         $title = "Edit Product: " . $product->name;
@@ -97,6 +101,8 @@ class ProductController extends SearchableController
 
     public function create(Request $request): RedirectResponse
     {
+        Gate::authorize('create', Product::class); // Authorization check
+
         $validatedData = $request->validate([
             'code' => 'required|unique:products',
             'name' => 'required',
@@ -112,8 +118,9 @@ class ProductController extends SearchableController
     }
 
 
-    public function update(Request $request, string $productCode): RedirectResponse
+    function update(Request $request, string $productCode): RedirectResponse
     {
+        Gate::authorize('update', Product::class); // Authorization check
 
         $validatedData = $request->validate([
             'code' => 'required|string|unique:products,code,' . $productCode . ',code',
@@ -130,15 +137,17 @@ class ProductController extends SearchableController
             ->route('products.list')
             ->with('status', "Product {$product->code} was updated.");
     }
-
-    public function delete(string $productCode): RedirectResponse
+    function delete(string $productCode): RedirectResponse
     {
+        Gate::authorize('delete', Product::class); // Authorization check
+
         $product = $this->find($productCode);
         $product->delete();
         return redirect(
             session()->get('bookmark.products.view', route('products.list'))
         )->with('status', "Product {$product->code} was deleted.");
     }
+
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
     {
@@ -153,13 +162,14 @@ class ProductController extends SearchableController
             ], $data));
         }
     }
-    public function showAddShopsForm(
+    function showAddShopsForm(
         ServerRequestInterface $request,
         ShopController $shopController,
         string $productCode
     ): View {
-        $product = $this->find($productCode);
+        Gate::authorize('update', Product::class); // Authorization check
 
+        $product = $this->find($productCode);
         $query = Shop::orderBy('code')
             ->whereDoesntHave('products', function (Builder $innerQuery) use ($product) {
                 return $innerQuery->where('code', $product->code);
@@ -180,26 +190,30 @@ class ProductController extends SearchableController
 
     function addShop(ServerRequestInterface $request, string $productCode): RedirectResponse
     {
+        Gate::authorize('update', Product::class); // Authorization check
+
         $product = $this->find($productCode);
         $data = $request->getParsedBody();
         $shop = Shop::whereDoesntHave('products', function (Builder $innerQuery) use ($product) {
             return $innerQuery->where('code', $product->code);
         })->where('code', $data['shop'])->firstOrFail();
         $product->shops()->attach($shop);
+
         return redirect()
             ->route('products.add-shop', ['product' => $productCode])
             ->with('status', "Shop {$shop->code} was added to Product {$product->code}.");
     }
 
-    function removeShop(
-        string $productCode,
-        string $shopCode
-    ): RedirectResponse {
+    function removeShop(string $productCode, string $shopCode): RedirectResponse
+    {
+        Gate::authorize('update', Product::class); // Authorization check
+
         $product = $this->find($productCode);
         $shop = $product->shops()
             ->where('code', $shopCode)
             ->firstOrFail();
         $product->shops()->detach($shop);
+
         return redirect()
             ->back()
             ->with('status', "Shop {$shop->code} was removed from Product {$product->code}.");

@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.9",
+        "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
         "nyholm/psr7": "^1.8",
         "symfony/psr-http-message-bridge": "^7.1"

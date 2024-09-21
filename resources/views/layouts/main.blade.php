@@ -21,6 +21,25 @@
         function confirmDelete() {
             document.getElementById('deleteForm').submit();
         }
+
+        function toggleDropdown() {
+    const dropdown = document.getElementById("userDropdown");
+    dropdown.classList.toggle("show");
+}
+
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-icon')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
     </script>
 </head>
 
@@ -35,8 +54,25 @@
                         <li><a href="{{ route('products.list') }}">Product</a></li>
                         <li><a href="{{ route('shops.list') }}">Shop</a></li>
                         <li><a href="{{ route('categories.list') }}">Category</a></li>
+                        <li>
+                            @auth
+                            <div class="user-icon" onclick="toggleDropdown()">
+                                <i class="fas fa-user"></i> {{ Auth::user()->role }}
+                            </div>
+                            <div class="dropdown-content" id="userDropdown">
+                                @if(Auth::check())
+                                    <p>Logged in as: {{ Auth::user()->name }}</p>
+                                    <a href="{{ route('logout') }}">Logout</a>
+                                @else
+                                    <p>You are not logged in.</p>
+                                    <a href="{{ route('login') }}">Login</a>
+                                @endif
+                            </div>
+                            @endauth
+                        </li>
                     </ul>
                 </nav>
+
             </div>
         </header>
 

@@ -10,12 +10,17 @@
             <div class="product-actions">
                 <a href="{{ route('products.view-shops', ['product' => $product->code]) }}" class="primary-button">Show
                     Shops</a>
-                <a href="{{ route('products.edit-form', $product->code) }}" class="primary-button">Edit Product</a>
-                <form id="deleteForm" action="{{ route('products.delete', $product->code) }}" method="post" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" class="delete-button" onclick="showConfirmation()">Delete Product</button>
-                </form>
+                @can('update', \App\Models\Product::class)
+                    <a href="{{ route('products.edit-form', $product->code) }}" class="primary-button">Edit Product</a>
+                @endcan
+                @can('delete', \App\Models\Product::class)
+                    <form id="deleteForm" action="{{ route('products.delete', $product->code) }}" method="post"
+                        style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="delete-button" onclick="showConfirmation()">Delete Product</button>
+                    </form>
+                @endcan
             </div>
             <div id="confirmationModal" class="modal">
                 <div class="modal-content">
@@ -41,7 +46,8 @@
         @else
             <p class="no-results">No Products Found</p>
             <div class="button-group">
-                <a href="{{session()->get('bookmark.products.view', route('products.list'))}}" class="go-back-button">Back to Products List</a>
+                <a href="{{ session()->get('bookmark.products.view', route('products.list')) }}" class="go-back-button">Back
+                    to Products List</a>
             </div>
         @endif
     </div>

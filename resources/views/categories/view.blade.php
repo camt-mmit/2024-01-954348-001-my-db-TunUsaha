@@ -12,7 +12,9 @@
             <form id="deleteForm" action="{{ route('categories.delete', $category->code) }}" method="post" style="display: inline;">
                 @csrf
                 @method('DELETE')
+                @can('delete', $category)
                 <button type="button" class="delete-button" onclick="showConfirmation()">Delete Category</button>
+                @endcan
             </form>
             <div id="confirmationModal" class="modal">
                 <div class="modal-content">

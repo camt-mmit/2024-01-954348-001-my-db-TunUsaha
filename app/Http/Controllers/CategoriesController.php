@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Psr\Http\Message\ServerRequestInterface;
 use App\Models\Product;
+use Illuminate\Support\Facades\Gate;
 
 class CategoriesController extends SearchableController
 {
@@ -118,13 +119,15 @@ class CategoriesController extends SearchableController
     }
 
     public function delete(string $category): RedirectResponse
-    {
-        $category = $this->find($category);
-        $category->delete();
-        return redirect(
-            session()->get('categories.view', route('categories.list'))
-        )->with('status', "Category {$category->code} was deleted.");
-    }
+{
+    $category = $this->find($category);
+    Gate::authorize('delete', $category); // ตรวจสอบสิทธิ์การลบ
+    $category->delete();
+    return redirect(
+        session()->get('categories.view', route('categories.list'))
+    )->with('status', "Category {$category->code} was deleted.");
+}
+
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
     {

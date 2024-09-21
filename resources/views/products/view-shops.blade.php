@@ -25,8 +25,9 @@
                     class="secondary-button">Clear</a>
             </div>
         </form>
-
+        @can('update', \App\Models\Product::class)
         <a href="{{ route('products.add-shops-form', ['product' => $product->code]) }}" class="new-product-button"><i class="fas fa-plus"></i>  Shops</a>
+        @endcan
         @if (isset($shops) && count($shops) > 0)
             <table class="product-table">
                 <thead>
@@ -34,7 +35,9 @@
                         <th>Code</th>
                         <th>Name</th>
                         <th>Owner</th>
+                        @can('update', \App\Models\Product::class)
                         <th>Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -45,9 +48,11 @@
                             </td>
                             <td>{{ $shop->name }}</td>
                             <td>{{ $shop->owner }}</td>
+                            @can('update', \App\Models\Product::class)
                             <td>
                                 <a href="{{ route('products.remove-shop', [ 'product' => $product->code,'shop' => $shop->code,]) }}"><i class="fas fa-trash"></i></a>
                             </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>

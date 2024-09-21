@@ -21,7 +21,7 @@
 
         <a href="{{ route('categories.create-form') }}" class="new-product-button">New Category</a>
         @if (isset($categories) && count($categories) > 0)
-            <table class="product-table">
+            <table class="category-table">
                 <thead>
                     <tr>
                         <th>Code</th>

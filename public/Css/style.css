@@ -360,10 +360,32 @@ select:focus {
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
+    margin-top: 20px;
+    /*table-layout: fixed;*/
+}
+
+.category-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    margin-top: 20px;
+    table-layout: fixed;
 }
 
 .product-table th,
 .product-table td {
+    padding: 0.9375rem;
+    text-align: left;
+    border-bottom: 0.0625rem solid var(--border-color);
+}
+
+.category-table th,
+.category-table td {
     padding: 0.9375rem;
     text-align: left;
     border-bottom: 0.0625rem solid var(--border-color);
@@ -377,7 +399,19 @@ select:focus {
     letter-spacing: 0.05em;
 }
 
+.category-table th {
+    font-weight: 600;
+    color: var(--light-text-color);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
 .product-table tr:last-child td {
+    border-bottom: none;
+}
+
+.category-table tr:last-child td {
     border-bottom: none;
 }
 
@@ -388,6 +422,17 @@ select:focus {
 }
 
 .product-table a:hover {
+    text-decoration: underline;
+    color: var(--primary-hover-color);
+}
+
+.category-table a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.category-table a:hover {
     text-decoration: underline;
     color: var(--primary-hover-color);
 }
@@ -747,3 +792,190 @@ footer .container {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transform: scale(1.02);
 }
+
+/* Login Container Styles */
+/* CSS Style for Full-Screen Apple-like Login Page */
+.login-label {
+    font-size: 1rem;
+    color: #ffffff;
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    transition: all 0.3s ease;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.login-box {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 60px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    height: auto;
+    position: relative;
+}
+
+.login-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.login-group {
+    margin-bottom: 30px;
+    text-align: left;
+    position: relative;
+}
+
+.input-email,
+.input-password {
+    width: 100%;
+    padding: 12px 16px; /* Adjust padding to be suitable */
+    margin-top: 12px;
+    border: 1.5px solid #86868b;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    color: #1d1d1f;
+    transition: border-color 0.3s, box-shadow 0.3s; /* Add transition */
+    position: relative; /* เพิ่ม position เพื่อให้ label อยู่ที่ตำแหน่งที่ถูกต้อง */
+}
+
+.input-email::placeholder,
+.input-password::placeholder {
+    color: #999; /* Placeholder color */
+}
+
+/* Effects when input is focused */
+.input-email:focus,
+.input-password:focus {
+    outline: none;
+    border-color: #0071e3;
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.3);
+}
+
+/* Style for label when input is not empty or focused */
+.input-email:not(:placeholder-shown) + .login-label,
+.input-email:focus + .login-label,
+.input-password:not(:placeholder-shown) + .login-label,
+.input-password:focus + .login-label {
+    top: -8px; /* ย้าย label ขึ้น */
+    left: 16px;
+    font-size: 0.8rem; /* Smaller font size */
+    color: #0071e3; /* Change label color when input is not empty */
+}
+
+
+.login-button {
+    background-color: #0071e3;
+    color: #fff;
+    padding: 16px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 30%;
+    margin-top: 30px;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #005bb5;
+}
+
+.forgot-password {
+    display: block;
+    margin-top: 30px;
+    font-size: 1rem;
+    color: #0071e3;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.warn {
+    color: #d93025;
+    margin-top: 15px;
+    font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+    .login-box {
+        padding: 30px;
+    }
+}
+
+.social-login {
+    margin-top: 2%;
+}
+
+/* Social Button Styles */
+
+.social-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+.social-button.google {
+    background-color: #db4437;
+}
+
+.social-button.facebook {
+    background-color: #3b5998;
+}
+
+.social-button.github {
+    background-color: #333;
+}
+
+.social-button i {
+    margin-right: auto;
+}
+
+.user-icon {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown-content.show {
+    display: block; /* ทำให้แสดงเมื่อมีคลาส .show */
+}
+
+
+.dropdown-content p,
+.dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    color: black;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+

@@ -30,10 +30,12 @@
                 <a href="{{ route('products.list') }}" class="secondary-button">Clear</a>
             </div>
         </form>
+        @can('create', \App\Models\Product::class)
         <a href="{{ route('products.create-form') }}" class="new-product-button">New Product</a>
+        @endcan
 
         @if (isset($products) && count($products) > 0)
-            <table class="product-table">
+            <table class="product-table" mt-6>
                 <thead>
                     <tr>
                         <th>Code</th>
