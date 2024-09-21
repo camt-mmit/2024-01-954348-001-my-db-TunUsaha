@@ -37,21 +37,21 @@ class ShopController extends SearchableController
         return 'shops.list';
     }
 
-    public function showProducts(Request $request, ProductController $productController, $categoryCode)
-    {
-        $category = Category::where('code', $categoryCode)->firstOrFail();
-        $search = $productController->prepareSearch($request->query());
-        $query = $productController->filter($category->products(), $search);
+    public function showProducts(Request $request, ProductController $productController, Shop $shop)
+{
+    // แก้ไขโค้ดให้ใช้ $shop แทน $category
+    $search = $productController->prepareSearch($request->query());
+    $query = $productController->filter($shop->products(), $search);
 
-        session()->put('bookmark.shops.view-products', url()->current());
+    session()->put('bookmark.shops.view-products', url()->current());
 
-        return view('categories.view-products', [
-            'title' => "{$this->title} {$category->name} : Products",
-            'category' => $category,
-            'search' => $search,
-            'products' => $query->paginate(5),
-        ]);
-    }
+    return view('shops.view-products', [
+        'title' => "{$this->title} {$shop->name} : Products",
+        'shop' => $shop,
+        'search' => $search,
+        'products' => $query->paginate(5),
+    ]);
+}
 
 
     public function index(): View
@@ -69,15 +69,15 @@ class ShopController extends SearchableController
     }
 
 
-    public function show(string $shop): View
-    {
-        $shop = $this->find($shop)->loadCount('products');
-        session(['bookmark.shops.view' => url()->current()]);
+    public function show(Shop $shop): View
+{
+    $shop->loadCount('products');
+    session(['bookmark.shops.view' => url()->current()]);
 
-        return $this->view('shops.view', [
-            'shop' => $shop,
-        ]);
-    }
+    return $this->view('shops.view', [
+        'shop' => $shop,
+    ]);
+}
 
     public function showCreateForm(): View
     {
@@ -152,54 +152,52 @@ class ShopController extends SearchableController
     }
 
     public function showAddProductsForm(
-        ServerRequestInterface $request,
+        Request $request,
         ProductController $productController,
-        string $categoryCode
+        Shop $shop
     ): View {
-        $category = $this->find($categoryCode);
+
 
         $query = Product::orderBy('code')
-            ->whereDoesntHave('category', function (Builder $innerQuery) use ($category) {
-                return $innerQuery->where('code', $category->code);
+            ->whereDoesntHave('shops', function (Builder $innerQuery) use ($shop) {
+                return $innerQuery->where('id', $shop->id);
             });
 
-        $search = $productController->prepareSearch($request->getQueryParams());
+        $search = $productController->prepareSearch($request->query());
         $query = $productController->filter($query, $search);
 
         session()->put('bookmark.shops.add-products-form', url()->current());
 
-        return view('categories.add-products-form', [
-            'title' => "{$this->title} {$category->code} : Add Products",
+        return view('shops.add-products-form', [
+            'title' => "{$this->title} {$shop->name} : Add Products",
             'search' => $search,
-            'category' => $category,
+            'shop' => $shop,
             'products' => $query->paginate(4),
         ]);
     }
 
 
-    function addProduct(ServerRequestInterface $request, string $shopCode): RedirectResponse
-    {
-        $shop = $this->find($shopCode);
-        $data = $request->getParsedBody();
-        $product = Product::whereDoesntHave('shops', function (Builder $innerQuery) use ($shop) {
-            return $innerQuery->where('code', $shop->code);
-        })->where('code', $data['product'])->firstOrFail();
-        $shop->products()->attach($product);
-        return redirect()
-            ->route('shops.add-product', ['shop' => $shopCode])
-            ->with('status', "Product {$product->code} was added to Shop {$shop->code}.");
-    }
+    public function addProduct(Request $request, Shop $shop): RedirectResponse
+{
+    $data = $request->validated();
+    $product = Product::whereDoesntHave('shops', function (Builder $innerQuery) use ($shop) {
+        return $innerQuery->where('id', $shop->id);
+    })->where('code', $data['product'])->firstOrFail();
+    $shop->products()->attach($product);
+    return redirect()
+        ->route('shops.add-products-form', ['shop' => $shop->code])
+        ->with('status', "Product {$product->code} was added to Shop {$shop->code}.");
+}
 
-    function removeProduct(string $shopCode, string $productCode): RedirectResponse
-    {
-        $shop = $this->find($shopCode);
-        $product = $shop->products()
-            ->where('code', $productCode)
-            ->firstOrFail();
+public function removeProduct(Shop $shop, string $productCode): RedirectResponse
+{
+    $product = $shop->products()
+        ->where('code', $productCode)
+        ->firstOrFail();
 
-        $shop->products()->detach($product);
-        return redirect()
-            ->back()
-            ->with('status', "Product {$product->code} was removed from Shop {$shop->code}.");
-    }
+    $shop->products()->detach($product);
+    return redirect()
+        ->back()
+        ->with('status', "Product {$product->code} was removed from Shop {$shop->code}.");
+}
 }

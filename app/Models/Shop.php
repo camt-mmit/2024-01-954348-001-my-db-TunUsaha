@@ -16,5 +16,10 @@ class Shop extends Model
     {
         return $this->belongsToMany(Product::class)->withTimestamps();
     }
+
+    public function getRouteKeyName()
+{
+    return 'code';
+}
 }
 

@@ -24,4 +24,5 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Pagination\Paginator
             ::defaultSimpleView('vendor.pagination.simple-default');
     }
+
 }

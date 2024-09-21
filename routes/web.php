@@ -62,10 +62,10 @@ Route::middleware([
                 });
             });
 
-        Route::controller(ShopController::class)
+            Route::controller(ShopController::class)
             ->prefix('shops')
             ->name('shops.')
-            ->group(function () {
+            ->group(static function () {
                 Route::get('', 'index')->name('list');
                 Route::get('/create', 'showCreateForm')->name('create-form');
                 Route::post('/create', 'create')->name('create');
@@ -73,11 +73,12 @@ Route::middleware([
                 Route::get('/{shop}/edit', 'showEditForm')->name('edit-form');
                 Route::put('/{shop}', 'update')->name('update');
                 Route::delete('/{shop}', 'delete')->name('delete');
-                Route::prefix('/{shop}/products')->group(function () {
+                Route::prefix('/{shop}/products')->group(static function () {
                     Route::get('', 'showProducts')->name('view-products');
                     Route::get('/add', 'showAddProductsForm')->name('add-products-form');
                     Route::post('/add', 'addProduct')->name('add-product');
-                    Route::get('/{product}/remove', 'removeProduct')->name('remove-product');
+                    Route::get('/{product}/remove', 'removeProduct')
+                        ->name('remove-product');
                 });
             });
 

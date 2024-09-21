@@ -17,9 +17,9 @@
                 <a href="{{ route('shops.list') }}" class="secondary-button">Clear</a>
             </div>
         </form>
-
+        @can('create', \App\Models\Shop::class)
         <a href="{{ route('shops.create-form') }}" class="new-product-button">New Shop</a>
-
+        @endcan
         @if (isset($shops) && count($shops) > 0)
             <table class="product-table">
                 <thead>

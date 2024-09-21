@@ -7,7 +7,10 @@
     @if (isset($shop))
         <div class="product-actions">
             <a href="{{ route('shops.view-products', ['shop' => $shop->code]) }}" class="primary-button">Show Products</a>
+            @can('update', \App\Models\Shop::class)
             <a href="{{ route('shops.edit-form', $shop->code) }}" class="primary-button">Edit Shop</a>
+            @endcan
+            @can('delete', \App\Models\Shop::class)
             <form id="deleteForm" action="{{ route('shops.delete', $shop->code) }}" method="post" style="display: inline;">
                 @csrf
                 @method('DELETE')
@@ -20,6 +23,7 @@
                     <button onclick="closeModal()">Cancel</button>
                 </div>
             </div>
+            @endcan
         </div>
             <div class="details-table">
                 <div class="details-container">

@@ -37,9 +37,10 @@
                 <a href="{{ route('shops.view-products', ['shop' => $shop->code]) }}" class="secondary-button">Clear</a>
             </div>
         </form>
-
+        @can('update', \App\Models\Shop::class)
         <a href="{{ route('shops.add-products-form', ['shop' => $shop->code]) }}" class="new-product-button"><i
                 class="fas fa-plus"></i> Products</a>
+        @endcan
         @if (isset($products) && count($products) > 0)
             <table class="product-table">
                 <thead>
@@ -48,7 +49,9 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Price</th>
+                        @can('update', \App\Models\Shop::class)
                         <th>Action</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -67,11 +70,13 @@
                                 </a>
                                 </td>
                             <td>${{ number_format($product->price, 2) }}</td>
+                            @can('update', \App\Models\Shop::class)
                             <td>
                                 <a
                                     href="{{ route('shops.remove-product', ['shop' => $shop->code, 'product' => $product->code]) }}"><i
                                         class="fas fa-trash"></i></a>
                             </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>
