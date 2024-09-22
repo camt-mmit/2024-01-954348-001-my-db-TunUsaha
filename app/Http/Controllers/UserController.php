@@ -90,33 +90,36 @@ class UserController extends Controller
     }
 
     public function showEditForm(string $userId): View
-    {
-        Gate::authorize('update', User::class); // Authorization check
+{
+    Gate::authorize('update', User::class); // Authorization check
 
-        $user = User::findOrFail($userId);
-        return view('users.edit-form', [
-            'user' => $user,
-            'title' => "Edit User: " . $user->name,
-        ]);
-    }
+    $user = User::findOrFail($userId);
+    return view('users.edit-form', [
+        'user' => $user,
+        'title' => "Edit User: " . $user->name,
+    ]);
+}
 
-    public function update(Request $request, string $userId): RedirectResponse
-    {
-        Gate::authorize('update', User::class); // Authorization check
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $userId,
-            'password' => 'nullable|string|min:6|confirmed',
-        ]);
 
-        $user = User::findOrFail($userId);
-        $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
+public function update(Request $request, string $userId): RedirectResponse
+{
+    Gate::authorize('update', User::class); // Authorization check
 
-        return redirect()
-            ->route('users.list')
-            ->with('status', "User {$user->name} was updated.");
-    }
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $userId,
+        'password' => 'nullable|string|min:6',
+    ]);
+
+    $user = User::findOrFail($userId);
+    $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
+
+    return redirect()
+        ->route('users.list')
+        ->with('status', "User {$user->name} was updated.");
+}
+
 
     public function delete(string $userId): RedirectResponse
 {
@@ -133,15 +136,18 @@ class UserController extends Controller
 }
 
 
-    public function showSelf(): View
+public function showSelf(): View
 {
-    $user = Auth::user(); // ใช้ Auth แทน auth()
+    $user = Auth::user();
     return view('users.self', [
         'user' => $user,
+        'title' => 'User Profile',
     ]);
 }
 
-/*public function updateSelf(Request $request): RedirectResponse
+
+/*public function updateSelf(Request $request, $id): RedirectResponse
+{
 {
     $user = Auth::user();
 
@@ -169,6 +175,7 @@ class UserController extends Controller
     return redirect()
         ->route('users.self')
         ->with('status', "Your profile has been updated.");
-}*/
+}
 
+}*/
 }

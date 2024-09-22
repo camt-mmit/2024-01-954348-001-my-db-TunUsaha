@@ -62,16 +62,17 @@ window.onclick = function(event) {
                                 @if(Auth::user()->role === 'ADMIN')
                                     <a href="{{ route('users.list') }}">Manage Users</a>
                                 @else
-                                    <a href="{{ route('users.self') }}">Account</a>
-                                    <a href="{{ route('users.update-self') }}">Settings</a>
+                                    <a href="{{ route('users.self', Auth::user()->id) }}">Account</a>
+                                    <a href="{{ route('users.update-self', Auth::user()->id) }}">Settings</a>
                                 @endif
                                 <a href="{{ route('logout') }}">Logout</a>
-                            @else
-                                <p>You are not logged in.</p>
-                                <a href="{{ route('login') }}">Login</a>
-                            @endif
+                                @else
+                                    <p>You are not logged in.</p>
+                                    <a href="{{ route('login') }}">Login</a>
+                                @endif
                             </div>
                         </li>
+
                     </ul>
                 </nav>
 

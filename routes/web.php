@@ -37,7 +37,7 @@ Route::middleware([
 ])->group(function () {
     Route::controller(LoginController::class)
         ->prefix('auth')
-        ->group(function() {
+        ->group(function () {
             Route::get('/login', 'showLoginForm')->name('login');
             Route::post('/login', 'authenticate')->name('authenticate');
             Route::get('/logout', 'logout')->name('logout');
@@ -63,7 +63,7 @@ Route::middleware([
                 });
             });
 
-            Route::controller(ShopController::class)
+        Route::controller(ShopController::class)
             ->prefix('shops')
             ->name('shops.')
             ->group(static function () {
@@ -114,9 +114,8 @@ Route::middleware([
                 Route::get('/{user}/edit', 'showEditForm')->name('edit-form');
                 Route::put('/{user}', 'update')->name('update');
                 Route::delete('/{user}', 'delete')->name('delete');
-                Route::get('/self', 'showSelf')->name('self');
-                Route::put('/self', 'updateSelf')->name('update-self');
+                Route::get('/self/{id}', 'showSelf')->name('self');
+                Route::get('/self/{id}/edit', 'updateSelf')->name('update-self');
             });
     });
-
 });
