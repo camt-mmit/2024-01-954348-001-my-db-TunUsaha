@@ -8,7 +8,7 @@
 
         @if (isset($user))
     <div class="product-actions">
-        <a href="{{ route('users.update-self', $user->id) }}" class="primary-button">Edit User</a>
+        <a href="{{ route('users.update-self', Auth::user()->id) }}" class="primary-button">Edit Profile</a>
         @can('delete', $user)
             @if (Auth::user()->id !== $user->id)
                 <form id="deleteForm" action="{{ route('users.delete', $user->id) }}" method="post" style="display: inline;">

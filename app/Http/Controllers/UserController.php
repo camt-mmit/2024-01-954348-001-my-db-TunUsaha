@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -31,22 +32,22 @@ class UserController extends Controller
     }
 
     public function list(Request $request): View
-{
-    $search = $request->query('term');
-    $query = $this->getQuery()->when($search, function ($query) use ($search) {
-        return $query->where('name', 'like', "%{$search}%")
-                     ->orWhere('email', 'like', "%{$search}%")
-                     ->orWhere('role', 'like', "%{$search}%");
-    });
+    {
+        $search = $request->query('term');
+        $query = $this->getQuery()->when($search, function ($query) use ($search) {
+            return $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('role', 'like', "%{$search}%");
+        });
 
-    $users = $query->paginate($this->getItemsPerPage());
+        $users = $query->paginate($this->getItemsPerPage());
 
-    return view($this->getListViewName(), [
-        'title' => 'User List',
-        'search' => ['term' => $search],
-        'users' => $users,
-    ]);
-}
+        return view($this->getListViewName(), [
+            'title' => 'User List',
+            'search' => ['term' => $search],
+            'users' => $users,
+        ]);
+    }
 
 
     public function show(string $email): View
@@ -90,92 +91,96 @@ class UserController extends Controller
     }
 
     public function showEditForm(string $userId): View
-{
-    Gate::authorize('update', User::class); // Authorization check
+    {
+        Gate::authorize('update', User::class); // Authorization check
 
-    $user = User::findOrFail($userId);
-    return view('users.edit-form', [
-        'user' => $user,
-        'title' => "Edit User: " . $user->name,
-    ]);
-}
+        $user = User::findOrFail($userId);
+        return view('users.edit-form', [
+            'user' => $user,
+            'title' => "Edit User: " . $user->name,
+        ]);
+    }
 
 
 
-public function update(Request $request, string $userId): RedirectResponse
-{
-    Gate::authorize('update', User::class); // Authorization check
+    public function update(Request $request, string $userId): RedirectResponse
+    {
+        Gate::authorize('update', User::class); // Authorization check
 
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $userId,
-        'password' => 'nullable|string|min:6',
-    ]);
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $userId,
+            'password' => 'nullable|string|min:6',
+        ]);
 
-    $user = User::findOrFail($userId);
-    $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
+        $user = User::findOrFail($userId);
+        $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
 
-    return redirect()
-        ->route('users.list')
-        ->with('status', "User {$user->name} was updated.");
-}
+        return redirect()
+            ->route('users.list')
+            ->with('status', "User {$user->name} was updated.");
+    }
 
 
     public function delete(string $userId): RedirectResponse
-{
-    $userToDelete = User::findOrFail($userId);
+    {
+        $userToDelete = User::findOrFail($userId);
 
-    // ตรวจสอบการอนุญาต
-    Gate::authorize('delete', [$userToDelete]); // ส่งตัวแปรที่ต้องการลบ
+        // ตรวจสอบการอนุญาต
+        Gate::authorize('delete', [$userToDelete]); // ส่งตัวแปรที่ต้องการลบ
 
-    $userToDelete->delete();
+        $userToDelete->delete();
 
-    return redirect()
-        ->route('users.list')
-        ->with('status', "User {$userToDelete->name} was deleted.");
-}
-
-
-public function showSelf(): View
-{
-    $user = Auth::user();
-    return view('users.self', [
-        'user' => $user,
-        'title' => 'User Profile',
-    ]);
-}
-
-
-/*public function updateSelf(Request $request, $id): RedirectResponse
-{
-{
-    $user = Auth::user();
-
-    // ตรวจสอบว่า $user ไม่ใช่ null
-    if (!$user) {
-        return redirect()->route('login')->with('error', 'Please log in first.');
+        return redirect()
+            ->route('users.list')
+            ->with('status', "User {$userToDelete->name} was deleted.");
     }
 
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'password' => 'nullable|string|min:6|confirmed',
-    ]);
 
-    // ใช้ array_filter เพื่อไม่ให้ส่งค่าที่เป็น null
-    $user->fill(array_filter($validatedData, fn($value) => !is_null($value)));
-
-    // ถ้ามีการเปลี่ยนแปลงรหัสผ่าน ให้ทำการเข้ารหัส
-    if (!empty($validatedData['password'])) {
-        $user->password = bcrypt($validatedData['password']);
+    public function showSelf(): View
+    {
+        $user = Auth::user();
+        return view('users.self', [
+            'user' => $user,
+            'title' => 'User Profile',
+        ]);
     }
 
-    $user->save(); // ใช้ save แทน update
+    public function showUpdateSelf(string $userId): View
+    {
+        $user = User::findOrFail($userId);
+        Gate::authorize('update', $user);
 
-    return redirect()
-        ->route('users.self')
-        ->with('status', "Your profile has been updated.");
-}
+        return view('users.update-self', [
+            'user' => $user,
+            'title' => "Edit Profile: " . $user->name,
+        ]);
+    }
 
-}*/
+
+    public function updateSelf(Request $request, $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+
+        if (!Auth::check() || Auth::id() !== $user->id) {
+            return redirect()->route('login')->with('error', 'Please log in first.');
+        }
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+
+        if (!empty($validatedData['password'])) {
+            $user->password = Hash::make($validatedData['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.self', $user->id)->with('status', "Your profile has been updated.");
+    }
 }

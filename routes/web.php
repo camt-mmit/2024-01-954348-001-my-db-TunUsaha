@@ -115,7 +115,8 @@ Route::middleware([
                 Route::put('/{user}', 'update')->name('update');
                 Route::delete('/{user}', 'delete')->name('delete');
                 Route::get('/self/{id}', 'showSelf')->name('self');
-                Route::get('/self/{id}/edit', 'updateSelf')->name('update-self');
+                Route::get('/self/{userId}/edit', 'showUpdateSelf')->name('update-self');
+                Route::put('/self/{userId}', 'updateSelf')->name('update-self-submit');
             });
     });
 });

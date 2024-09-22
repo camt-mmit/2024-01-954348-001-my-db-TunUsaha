@@ -63,7 +63,6 @@ window.onclick = function(event) {
                                     <a href="{{ route('users.list') }}">Manage Users</a>
                                 @else
                                     <a href="{{ route('users.self', Auth::user()->id) }}">Account</a>
-                                    <a href="{{ route('users.update-self', Auth::user()->id) }}">Settings</a>
                                 @endif
                                 <a href="{{ route('logout') }}">Logout</a>
                                 @else
