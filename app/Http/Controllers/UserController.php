@@ -74,11 +74,15 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'role' => 'required|string|in:ADMIN,USER', // ทำให้ต้องมีการระบุ
         ]);
+
 
         $user = User::create(array_merge($validatedData, [
             'password' => bcrypt($request->password),
+            'role' => $request->role,
         ]));
+
 
         return redirect()
             ->route('users.list')
