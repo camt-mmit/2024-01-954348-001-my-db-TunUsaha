@@ -44,8 +44,8 @@ class LoginController extends Controller
             // regenerate the new session ID
             session()->regenerate();
 
-            // redirect to the requested URL or to route products.list if does not specify
-            return redirect()->intended(route('products.list'));
+            // redirect to the requested URL or to route home if does not specify
+            return redirect()->intended(route('home'));
         } else {
             // if cannot authenticate redirect back to loginForm with error message.
             return redirect()->back()->withErrors([
