@@ -7,11 +7,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 
 // หน้าแรก
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'showHome'])->name('home');
 
 // ลิงก์เข้าสู่ระบบผ่าน Google
 Route::get('/login/google', function () {

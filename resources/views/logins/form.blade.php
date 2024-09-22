@@ -10,6 +10,18 @@
     <link rel="icon" href="{{ asset('icon/logo.svg') }}" type="image/svg+xml">
 
     <script>
+        function showConfirmation() {
+            document.getElementById('confirmationModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+
+        function confirmDelete() {
+            document.getElementById('deleteForm').submit();
+        }
+
         function toggleDropdown() {
             document.getElementById("userDropdown").classList.toggle("show");
         }
@@ -26,6 +38,16 @@
                 }
             }
         }
+
+        document.addEventListener('scroll', function() {
+            const autoShowElement = document.querySelector('.autoShow');
+            const position = autoShowElement.getBoundingClientRect();
+
+            // ตรวจสอบถ้าอยู่ในมุมมอง
+            if (position.top < window.innerHeight && position.bottom >= 0) {
+                autoShowElement.classList.add('visible'); // เพิ่มคลาสเมื่ออยู่ในมุมมอง
+            }
+        });
     </script>
 
 </head>
@@ -36,6 +58,7 @@
             </h1>
             <nav>
                 <ul>
+                    <li><a href="{{ route('home') }}">Home</a></li>
                     <li><a href="{{ route('products.list') }}">Product</a></li>
                     <li><a href="{{ route('shops.list') }}">Shop</a></li>
                     <li><a href="{{ route('categories.list') }}">Category</a></li>
