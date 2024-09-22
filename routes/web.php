@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoriesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\UserController;
 
 // หน้าแรก
 Route::get('/', function () {
@@ -101,4 +102,21 @@ Route::middleware([
                 });
             });
     });
+    Route::middleware(['auth'])->group(function () {
+        Route::controller(UserController::class)
+            ->prefix('users')
+            ->name('users.')
+            ->group(function () {
+                Route::get('', 'list')->name('list');
+                Route::get('/create', 'showCreateForm')->name('create-form');
+                Route::post('/create', 'create')->name('create');
+                Route::get('/{email}', 'show')->name('view');
+                Route::get('/{user}/edit', 'showEditForm')->name('edit-form');
+                Route::put('/{user}', 'update')->name('update');
+                Route::delete('/{user}', 'delete')->name('delete');
+                Route::get('/self', 'showSelf')->name('self');
+                Route::put('/self', 'updateSelf')->name('update-self');
+            });
+    });
+
 });

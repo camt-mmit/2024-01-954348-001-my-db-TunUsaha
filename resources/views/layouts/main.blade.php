@@ -23,23 +23,21 @@
         }
 
         function toggleDropdown() {
-    const dropdown = document.getElementById("userDropdown");
-    dropdown.classList.toggle("show");
+    document.getElementById("userDropdown").classList.toggle("show");
 }
 
-
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(event) {
-            if (!event.target.matches('.user-icon')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.user-icon')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
             }
         }
+    }
+}
     </script>
 </head>
 
@@ -55,20 +53,24 @@
                         <li><a href="{{ route('shops.list') }}">Shop</a></li>
                         <li><a href="{{ route('categories.list') }}">Category</a></li>
                         <li>
-                            @auth
                             <div class="user-icon" onclick="toggleDropdown()">
                                 <i class="fas fa-user"></i> {{ Auth::user()->role }}
                             </div>
                             <div class="dropdown-content" id="userDropdown">
                                 @if(Auth::check())
-                                    <p>Logged in as: {{ Auth::user()->name }}</p>
-                                    <a href="{{ route('logout') }}">Logout</a>
+                                <p>Logged in as: {{ Auth::user()->name }}</p>
+                                @if(Auth::user()->role === 'ADMIN')
+                                    <a href="{{ route('users.list') }}">Manage Users</a>
                                 @else
-                                    <p>You are not logged in.</p>
-                                    <a href="{{ route('login') }}">Login</a>
+                                    <a href="{{ route('users.self') }}">Account</a>
+                                    <a href="{{ route('users.update-self') }}">Settings</a>
                                 @endif
+                                <a href="{{ route('logout') }}">Logout</a>
+                            @else
+                                <p>You are not logged in.</p>
+                                <a href="{{ route('login') }}">Login</a>
+                            @endif
                             </div>
-                            @endauth
                         </li>
                     </ul>
                 </nav>
