@@ -102,6 +102,11 @@
                 <span class="app-cl-info">{{ $value }}</span>
             </div>
         @endsession
+        @error('error')
+            <div class="warning_session">
+                <span class="app-cl-warn">{{ $message }}</span>
+            </div>
+        @enderror
 
         <main>
             <div class="container ">

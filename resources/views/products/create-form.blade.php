@@ -15,12 +15,12 @@
 
             <div class="form-group">
                 <label for="code">Code</label>
-                <input type="text" id="code" name="code" required>
+                <input type="text" id="code" name="code" value="{{ old('code') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" value="{{ old('name') }} " required>
             </div>
 
             <div class="form-group">
@@ -28,22 +28,21 @@
                 <select id="category" name="category_id">
                     <option value="" >-- Please select a category --</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">
+                        <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
                             [{{ $category->code }}] {{ $category->name }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="number" id="price" step="any" name="price" required>
+                <input type="number" id="price" step="any" name="price" value="{{ old('price') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" rows="5" required class="price-input"></textarea>
+                <textarea id="description" name="description" rows="5"  required class="price-input">{{ old('description') }}</textarea>
             </div>
             <div class="button-group">
                 <button type="submit" class="primary-button ">Create Product</button>
