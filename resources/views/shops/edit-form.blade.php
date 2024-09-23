@@ -12,36 +12,36 @@
 
             <div class="form-group">
                 <label for="code">Code</label>
-                <input type="text" id="code" name="code" class="price-input" value="{{ $shop->code }}" readonly>
+                <input type="text" id="code" name="code" class="price-input" value="{{old('code', $shop->code) }}" readonly>
             </div>
 
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" class="price-input" value="{{ $shop->name }}"
+                <input type="text" id="name" name="name" class="price-input"value="{{old('name', $shop->name) }}"
                     required>
             </div>
 
             <div class="form-group">
                 <label for="owner">Owner</label>
-                <input type="text" id="owner" name="owner" class="price-input" value="{{ $shop->owner }}"
+                <input type="text" id="owner" name="owner" class="price-input" value="{{old('owner', $shop->owner) }}"
                     required>
             </div>
 
             <div class="form-group">
                 <label for="latitude">Latitude</label>
                 <input type="number" id="latitude" step="any" name="latitude" class="price-input"
-                    value="{{ $shop->latitude }}" required>
+                value="{{old('latitude', $shop->latitude) }}" required>
             </div>
 
             <div class="form-group">
                 <label for="longitude">Longitude</label>
                 <input type="number" id="longitude" step="any" name="longitude" class="price-input"
-                    value="{{ $shop->longitude }}" required>
+                value="{{old('longitude', $shop->longitude) }}" required>
             </div>
 
             <div class="form-group">
                 <label for="address">Address</label>
-                <textarea id="address" name="address" rows="5" class="price-input" required>{{ $shop->address }}</textarea>
+                <textarea id="address" name="address" rows="5" class="price-input" required>{{old('address', $shop->address) }}"</textarea>
             </div>
 
             <div class="button-group">
