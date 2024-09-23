@@ -40,7 +40,7 @@ class ShopController extends SearchableController
 
     public function showProducts(Request $request, ProductController $productController, Shop $shop)
     {
-        // แก้ไขโค้ดให้ใช้ $shop แทน $category
+        // Fix code to use $shop instead of $category
         $search = $productController->prepareSearch($request->query());
         $query = $productController->filter($shop->products(), $search);
 

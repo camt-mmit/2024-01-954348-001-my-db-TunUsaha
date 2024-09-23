@@ -853,7 +853,7 @@ footer .container {
     background-color: #ffffff;
     color: #1d1d1f;
     transition: border-color 0.3s, box-shadow 0.3s; /* Add transition */
-    position: relative; /* เพิ่ม position เพื่อให้ label อยู่ที่ตำแหน่งที่ถูกต้อง */
+    position: relative; /* Add position to make the label appear in the correct position */
 }
 
 .input-email::placeholder,
@@ -874,7 +874,7 @@ footer .container {
 .input-email:focus + .login-label,
 .input-password:not(:placeholder-shown) + .login-label,
 .input-password:focus + .login-label {
-    top: -8px; /* ย้าย label ขึ้น */
+    top: -8px; /* Move label up */
     left: 16px;
     font-size: 0.8rem; /* Smaller font size */
     color: #0071e3; /* Change label color when input is not empty */
@@ -967,7 +967,7 @@ footer .container {
 }
 
 .dropdown-content.show {
-    display: block; /* ทำให้แสดงเมื่อมีคลาส .show */
+    display: block; /* Show the dropdown content when it has the class .show */
 }
 
 
