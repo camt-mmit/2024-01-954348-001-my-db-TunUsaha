@@ -14,23 +14,28 @@ class UserPolicy
         //
     }
 
-    public function update(User $currentUser, User $user = null): bool
+    public function viewAny(User $user): bool
     {
-        // If currentUser is an admin, allow them to update any user's info
-        if ($currentUser->role === 'ADMIN') {
-            return true;
-        }
-
-        // If not an admin, only allow updating their own info
-        // Note: $user might be null when called from Gate::authorize('update', User::class)
-        return $user !== null && $currentUser->id === $user->id;
+        return $user->role === 'ADMIN';
     }
+
+    public function update(User $currentUser, User $user): bool
+{
+    // If currentUser is an admin, allow them to update any user's info
+    if ($currentUser->role === 'ADMIN') {
+        return true; // Admin can update any user's info, including their roles
+    }
+
+    // If not an admin, only allow updating their own info
+    return $user !== null && $currentUser->id === $user->id;
+}
+
 
 
     public function create(User $user)
-{
-    return $user->role === 'ADMIN';
-}
+    {
+        return $user->role === 'ADMIN';
+    }
 
 
     public function delete(User $currentUser, User $user): bool

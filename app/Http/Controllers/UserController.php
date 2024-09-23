@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 class UserController extends Controller
 {
     protected string $title = 'Users';
@@ -32,22 +33,25 @@ class UserController extends Controller
     }
 
     public function list(Request $request): View
-    {
-        $search = $request->query('term');
-        $query = $this->getQuery()->when($search, function ($query) use ($search) {
-            return $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('role', 'like', "%{$search}%");
-        });
+{
+    Gate::authorize('viewAny', User::class); // Authorization check
 
-        $users = $query->paginate($this->getItemsPerPage());
+    $search = $request->query('term');
+    $query = $this->getQuery()->when($search, function ($query) use ($search) {
+        return $query->where('name', 'like', "%{$search}%")
+            ->orWhere('email', 'like', "%{$search}%")
+            ->orWhere('role', 'like', "%{$search}%");
+    });
 
-        return view($this->getListViewName(), [
-            'title' => 'User List',
-            'search' => ['term' => $search],
-            'users' => $users,
-        ]);
-    }
+    $users = $query->paginate($this->getItemsPerPage());
+
+    return view($this->getListViewName(), [
+        'title' => 'User List',
+        'search' => ['term' => $search],
+        'users' => $users,
+    ]);
+}
+
 
 
     public function show(string $email): View
@@ -88,35 +92,39 @@ class UserController extends Controller
         ->with('status', "User {$user->name} was created.");
 }
 
-    public function showEditForm(string $userId): View
-    {
-        $user = User::findOrFail($userId);
-        Gate::authorize('update', $user); // Pass the $user instance
+public function showEditForm(string $userId): View
+{
+    $user = User::findOrFail($userId);
+    $currentUser = Auth::user(); // ใช้ Auth แทน auth()
 
-        return view('users.edit-form', [
-            'user' => $user,
-            'title' => "Edit User: " . $user->name,
-        ]);
-    }
+    Gate::authorize('update', $user);
 
-    public function update(Request $request, string $userId): RedirectResponse
-    {
-        $user = User::findOrFail($userId);
-        Gate::authorize('update', $user); // Pass the $user instance
+    return view('users.edit-form', [
+        'user' => $user,
+        'currentUser' => $currentUser,
+        'title' => "Edit User: " . $user->name,
+    ]);
+}
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $userId,
-            'password' => 'nullable|string|min:6',
-        ]);
 
-        $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
+public function update(Request $request, string $userId): RedirectResponse
+{
+    $user = User::findOrFail($userId);
+    Gate::authorize('update', $user);
 
-        return redirect()
-            ->route('users.list')
-            ->with('status', "User {$user->name} was updated.");
-    }
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $userId,
+        'password' => 'nullable|string|min:6',
+        'role' => 'required|string|in:ADMIN,USER',
+    ]);
 
+    $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
+
+    return redirect()
+        ->route('users.list')
+        ->with('status', "User {$user->name} was updated.");
+}
 
     public function delete(string $userId): RedirectResponse
     {

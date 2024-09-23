@@ -27,9 +27,16 @@
             </div>
 
             <div class="form-group">
-                <p><strong>Role:</strong> {{ $user->role }}</p>
+                <label for="role">Role ::</label>
+                @if ($currentUser->id === $user->id)
+                    <p>{{ $user->role }}</p>
+                @else
+                    <select id="role" name="role">
+                        <option value="ADMIN" {{ $user->role === 'ADMIN' ? 'selected' : '' }}>ADMIN</option>
+                        <option value="USER" {{ $user->role === 'USER' ? 'selected' : '' }}>USER</option>
+                    </select>
+                @endif
             </div>
-
 
             <div class="button-group">
                 <button type="submit" class="primary-button">Update User</button>
