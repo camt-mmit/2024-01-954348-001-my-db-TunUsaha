@@ -12,6 +12,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends SearchableController
 {
@@ -163,18 +165,19 @@ class ProductController extends SearchableController
 
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
-    {
-        $title = $customTitle ?? $this->title;
-        if ($view == 'products.list') {
-            return view($view, array_merge([
-                'title' => $title,
-            ], $data));
-        } else {
-            return view($view, array_merge([
-                'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
-            ], $data));
-        }
+{
+    $title = $customTitle ?? $this->title;
+    if ($view == 'products.list') {
+        return view($view, array_merge([
+            'title' => $title,
+        ], $data));
+    } else {
+        return view($view, array_merge([
+            'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
+        ], $data));
     }
+}
+
     function showAddShopsForm(
         ServerRequestInterface $request,
         ShopController $shopController,
@@ -245,4 +248,5 @@ class ProductController extends SearchableController
         ]);
         }
         }
-}
+    }
+

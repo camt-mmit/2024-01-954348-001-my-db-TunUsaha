@@ -179,15 +179,21 @@ class ShopController extends SearchableController
 
     public function addProduct(Request $request, Shop $shop): RedirectResponse
 {
-    $data = $request->validated();
+    $data = $request->validate([
+        'product' => 'required|string', // กำหนด validation rules ที่ต้องการ
+    ]);
+
     $product = Product::whereDoesntHave('shops', function (Builder $innerQuery) use ($shop) {
         return $innerQuery->where('id', $shop->id);
     })->where('code', $data['product'])->firstOrFail();
+
     $shop->products()->attach($product);
+
     return redirect()
         ->route('shops.add-products-form', ['shop' => $shop->code])
         ->with('status', "Product {$product->code} was added to Shop {$shop->code}.");
 }
+
 
 public function removeProduct(Shop $shop, string $productCode): RedirectResponse
 {

@@ -26,9 +26,10 @@
                 <select id="category" name="category_id">
                     <option value="">-- Please select a category --</option>
                     @foreach($categories as $category)
-                        <option value="{{old('id', $product->id) }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
-                            [{{ $category->code }}] {{ $category->name }}
-                        </option>
+                    <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                        [{{ $category->code }}] {{ $category->name }}
+                    </option>
+
                     @endforeach
                 </select>
             </div>

@@ -67,28 +67,26 @@ class UserController extends Controller
         ]);
     }
 
-    public function create(Request $request): RedirectResponse
-    {
-        Gate::authorize('create', User::class); // Authorization check
+    public function create(Request $request)
+{
+    Gate::authorize('create', User::class); // ตรวจสอบสิทธิ์
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:ADMIN,USER',
-        ]);
+    // การตรวจสอบข้อมูล (validation)
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|string|min:0|confirmed',
+        'role' => 'required|string|in:ADMIN,USER',
+    ]);
 
+    // สร้าง user ใหม่
+    $user = User::create(array_merge($validatedData, [
+        'password' => bcrypt($request->password),
+    ]));
 
-        $user = User::create(array_merge($validatedData, [
-            'password' => bcrypt($request->password),
-            'role' => $request->role,
-        ]));
-
-
-        return redirect()
-            ->route('users.list')
-            ->with('status', "User {$user->name} was created.");
-    }
+    return redirect()->route('users.list')
+        ->with('status', "User {$user->name} was created.");
+}
 
     public function showEditForm(string $userId): View
     {

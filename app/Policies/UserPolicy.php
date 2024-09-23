@@ -27,10 +27,11 @@ class UserPolicy
     }
 
 
-    public function create(User $currentUser): bool
-    {
-        return $currentUser->isAdministrator();
-    }
+    public function create(User $user)
+{
+    return $user->role === 'ADMIN';
+}
+
 
     public function delete(User $currentUser, User $user): bool
     {
