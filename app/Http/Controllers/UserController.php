@@ -73,9 +73,10 @@ class UserController extends Controller
 
     public function create(Request $request)
 {
-    Gate::authorize('create', User::class); // ตรวจสอบสิทธิ์
+    Gate::authorize('create', User::class); // Authorization check
 
-    // การตรวจสอบข้อมูล (validation)
+    try {
+    // Validation
     $validatedData = $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users',
@@ -83,13 +84,18 @@ class UserController extends Controller
         'role' => 'required|string|in:ADMIN,USER',
     ]);
 
-    // สร้าง user ใหม่
+    // Create a new user
     $user = User::create(array_merge($validatedData, [
         'password' => bcrypt($request->password),
     ]));
 
     return redirect()->route('users.list')
         ->with('status', "User {$user->name} was created.");
+}catch (\Exception $excp) {
+    return redirect()->back()->withInput()->withErrors([
+        'error' => $excp->getMessage(),
+    ]);
+}
 }
 
 public function showEditForm(string $userId): View
@@ -112,6 +118,7 @@ public function update(Request $request, string $userId): RedirectResponse
     $user = User::findOrFail($userId);
     Gate::authorize('update', $user);
 
+    try {
     $validatedData = $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $userId,
@@ -124,6 +131,11 @@ public function update(Request $request, string $userId): RedirectResponse
     return redirect()
         ->route('users.list')
         ->with('status', "User {$user->name} was updated.");
+}catch (\Exception $excp) {
+    return redirect()->back()->withInput()->withErrors([
+        'error' => $excp->getMessage(),
+    ]);
+}
 }
 
     public function delete(string $userId): RedirectResponse
@@ -132,12 +144,18 @@ public function update(Request $request, string $userId): RedirectResponse
         // Check authorization
         Gate::authorize('delete', [$userToDelete]); // Send the variable to be deleted
 
+        try {
         $userToDelete->delete();
 
         return redirect()
             ->route('users.list')
             ->with('status', "User {$userToDelete->name} was deleted.");
+    }catch (\Exception $excp) {
+        return redirect()->back()->withInput()->withErrors([
+            'error' => $excp->getMessage(),
+        ]);
     }
+}
 
 
     public function showSelf(): View
@@ -165,6 +183,7 @@ public function update(Request $request, string $userId): RedirectResponse
         $user = User::findOrFail($id);
         Gate::authorize('update', $user);
 
+        try {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -181,5 +200,10 @@ public function update(Request $request, string $userId): RedirectResponse
         $user->save();
 
         return redirect()->route('users.self', $user->id)->with('status', "Your profile has been updated.");
+    }catch (\Exception $excp) {
+        return redirect()->back()->withInput()->withErrors([
+            'error' => $excp->getMessage(),
+        ]);
     }
+}
 }
