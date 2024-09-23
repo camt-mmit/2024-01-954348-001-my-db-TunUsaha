@@ -75,7 +75,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:ADMIN,USER', // ทำให้ต้องมีการระบุ
+            'role' => 'required|string|in:ADMIN,USER',
         ]);
 
 
@@ -92,20 +92,19 @@ class UserController extends Controller
 
     public function showEditForm(string $userId): View
     {
-        Gate::authorize('update', User::class); // Authorization check
-
         $user = User::findOrFail($userId);
+        Gate::authorize('update', $user); // Pass the $user instance
+
         return view('users.edit-form', [
             'user' => $user,
             'title' => "Edit User: " . $user->name,
         ]);
     }
 
-
-
     public function update(Request $request, string $userId): RedirectResponse
     {
-        Gate::authorize('update', User::class); // Authorization check
+        $user = User::findOrFail($userId);
+        Gate::authorize('update', $user); // Pass the $user instance
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -113,7 +112,6 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6',
         ]);
 
-        $user = User::findOrFail($userId);
         $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
 
         return redirect()
@@ -125,9 +123,8 @@ class UserController extends Controller
     public function delete(string $userId): RedirectResponse
     {
         $userToDelete = User::findOrFail($userId);
-
-        // ตรวจสอบการอนุญาต
-        Gate::authorize('delete', [$userToDelete]); // ส่งตัวแปรที่ต้องการลบ
+        // Check authorization
+        Gate::authorize('delete', [$userToDelete]); // Send the variable to be deleted
 
         $userToDelete->delete();
 
@@ -157,14 +154,10 @@ class UserController extends Controller
         ]);
     }
 
-
     public function updateSelf(Request $request, $id): RedirectResponse
     {
         $user = User::findOrFail($id);
-
-        if (!Auth::check() || Auth::id() !== $user->id) {
-            return redirect()->route('login')->with('error', 'Please log in first.');
-        }
+        Gate::authorize('update', $user);
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',

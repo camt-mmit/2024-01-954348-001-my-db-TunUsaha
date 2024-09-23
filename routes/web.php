@@ -9,28 +9,28 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 
-// หน้าแรก
+// Homepage
 Route::get('/', [HomeController::class, 'showHome'])->name('home');
 
-// ลิงก์เข้าสู่ระบบผ่าน Google
+// Links to login via Google
 Route::get('/login/google', function () {
     return Socialite::driver('google')->redirect();
 });
 Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
-// ลิงก์เข้าสู่ระบบผ่าน Facebook
+// Links to login via Facebook
 Route::get('/login/facebook', function () {
     return Socialite::driver('facebook')->redirect();
 });
 Route::get('/login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
 
-// ลิงก์เข้าสู่ระบบผ่าน GitHub
+// Links to login via GitHub
 Route::get('/login/github', function () {
     return Socialite::driver('github')->redirect();
 });
 Route::get('/login/github/callback', [LoginController::class, 'handleGithubCallback']);
 
-// กลุ่มเส้นทางที่มีการตรวจสอบสิทธิ์
+// Group of routes with authentication
 Route::middleware([
     'cache.headers:no_store;no_cache;must_revalidate;max_age=0',
 ])->group(function () {
@@ -42,7 +42,6 @@ Route::middleware([
             Route::get('/logout', 'logout')->name('logout');
         });
 
-    Route::middleware(['auth'])->group(function () {
         Route::controller(ProductController::class)
             ->prefix('products')
             ->name('products.')
@@ -118,4 +117,4 @@ Route::middleware([
                 Route::put('/self/{userId}', 'updateSelf')->name('update-self-submit');
             });
     });
-});
+
