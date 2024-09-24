@@ -13,21 +13,28 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    function showLoginForm(): View
-    {
-        return view('logins.form');
+    public function showLoginForm(): View
+{
+    // Check if the user is logged in.
+    if (Auth::check()) {
+        // If the user is logged in, log them out.
+        $this->logout();
     }
+    return view('logins.form');
+}
 
-    function logout(): RedirectResponse
-    {
-        Auth::logout();
-        session()->invalidate();
 
-        // regenerate CSRF token
-        session()->regenerateToken();
+public function logout(): RedirectResponse
+{
+    Auth::logout(); // Log out
+    session()->invalidate(); // Clear session data
 
-        return redirect()->route('login');
-    }
+    // Regenerate CSRF token
+    session()->regenerateToken(); // Generate a new CSRF token
+
+    return redirect()->route('login'); // Redirect to the login page
+}
+
 
     public function authenticate(ServerRequestInterface $request): RedirectResponse
     {
