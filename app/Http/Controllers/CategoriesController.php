@@ -131,21 +131,23 @@ class CategoriesController extends SearchableController
     }
 
     public function delete(string $category): RedirectResponse
-    {
-        Gate::authorize('delete', $category); // Check authorization for deletion
+{
+    $category = $this->find($category);
+    // Check permission using Category object
+    Gate::authorize('delete', $category);
 
-        try {
-            $category = $this->find($category);
-            $category->delete();
-            return redirect(
-                session()->get('categories.view', route('categories.list'))
-            )->with('status', "Category {$category->code} was deleted.");
-        } catch (\Exception $excp) {
-            return redirect()->back()->withInput()->withErrors([
-                'error' => $excp->getMessage(),
-            ]);
-        }
+    try {
+        $category->delete();
+        return redirect(
+            session()->get('categories.view', route('categories.list'))
+        )->with('status', "Category {$category->code} was deleted.");
+    } catch (\Exception $excp) {
+        return redirect()->back()->withInput()->withErrors([
+            'error' => $excp->getMessage(),
+        ]);
     }
+}
+
 
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
