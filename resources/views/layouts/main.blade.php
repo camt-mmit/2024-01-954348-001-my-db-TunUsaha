@@ -42,7 +42,7 @@
         window.addEventListener('scroll', () => {
             const content = document.querySelector('.main-content');
             const scrollPosition = window.scrollY;
-
+            console.log(scrollPosition);
             // ถ้าเลื่อนลงมากกว่า 50px ให้เล็กลง
             if (scrollPosition > 50) {
                 content.classList.add('small');
