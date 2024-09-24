@@ -26,6 +26,12 @@
             document.getElementById("userDropdown").classList.toggle("show");
         }
 
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+
         // Close the dropdown if the user clicks outside of it
         window.onclick = function(event) {
             if (!event.target.matches('.user-icon')) {
