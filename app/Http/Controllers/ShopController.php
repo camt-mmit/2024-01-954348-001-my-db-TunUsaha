@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Psr\Http\Message\ServerRequestInterface;
 use App\Models\Product;
-use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
 
 

@@ -12,8 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Log;
 
 class ProductController extends SearchableController
 {
