@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CategoriesController;
@@ -7,11 +8,43 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 
 // หน้าแรก
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
+Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
+Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+
+Route::post('/products/{product}/purchase', [InvoiceController::class, 'createInvoice'])->name('products.purchase');
+Route::get('/invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
+
+
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
+Route::get('/products', [ProductController::class, 'index'])->name('products');
+
+
+Route::prefix('products')->name('products.')->group(function () {
+    Route::get('/', [ProductController::class, 'list'])->name('list');
+    Route::get('/create', [ProductController::class, 'showCreateForm'])->name('create');
+    Route::post('/', [ProductController::class, 'create']);
+    Route::get('/{productCode}', [ProductController::class, 'show'])->name('view');
+    Route::get('/{productCode}/edit', [ProductController::class, 'showEditForm'])->name('edit');
+    Route::put('/{productCode}', [ProductController::class, 'update']);
+    Route::delete('/{productCode}', [ProductController::class, 'delete']);
+    Route::get('/{productCode}/shops', [ProductController::class, 'showShops'])->name('view-shops');
+    Route::get('/{productCode}/add-shop', [ProductController::class, 'showAddShopsForm'])->name('add-shop');
+    Route::post('/{productCode}/add-shop', [ProductController::class, 'addShop']);
+    Route::delete('/{productCode}/remove-shop/{shopCode}', [ProductController::class, 'removeShop']);
+});
+
 
 // ลิงก์เข้าสู่ระบบผ่าน Google
 Route::get('/login/google', function () {

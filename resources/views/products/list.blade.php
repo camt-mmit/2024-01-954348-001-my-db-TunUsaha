@@ -3,74 +3,51 @@
 @section('title', $title)
 
 @section('content')
-    <div class="content-wrapper">
-        <h1 class="page-title">Products List</h1>
-        <form action="{{ route('products.list') }}" method="get" class="search-form">
-            <div class="search-container">
-                <label class="app-inp-search">
-                    <label>Search <span class="separator text-blue-600">::</span></label>
-                    <input type="text" name="term" value="{{ $search['term'] ?? '' }}" class="search-input"
-                        placeholder="Search by code, or name" />
-                </label>
-            </div>
-            <div class="price-filter">
-                <div class="form-group">
-                    <label for="app-inp-min-price">Min Price <span class="separator text-blue-600">::</span></label>
-                    <input id="app-inp-min-price" type="number" name="minPrice" value="{{ $search['minPrice'] ?? '' }}"
-                        class="price-input" placeholder="$" />
-                </div>
-                <div class="form-group">
-                    <label for="app-inp-max-price">Max Price <span class="separator text-blue-600">::</span></label>
-                    <input id="app-inp-max-price" type="number" name="maxPrice" value="{{ $search['maxPrice'] ?? '' }}"
-                        class="price-input" placeholder="$" />
-                </div>
-            </div>
-            <div class="button-group">
-                <button type="submit" class="primary-button">Search</button>
-                <a href="{{ route('products.list') }}" class="secondary-button">Clear</a>
-            </div>
-        </form>
-        @can('create', \App\Models\Product::class)
-        <a href="{{ route('products.create-form') }}" class="new-product-button">New Product</a>
-        @endcan
+<div class="content-wrapper">
+    
+    @can('create', \App\Models\Product::class)
+        <div class="header">
+            <a href="{{ route('products.create-form') }}" class="new-product-button">Add New Product</a>
+        </div>
+    @endcan
 
-        @if (isset($products) && count($products) > 0)
-            <table class="product-table" mt-6>
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Shops</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        session()->put('bookmark.products.view', url()->full());
-                    @endphp
-                    @foreach ($products as $product)
-                        <tr>
-                            <td>
-                                <a href="{{ route('products.view', $product->code) }}">{{ $product->code }}</a>
-                            </td>
-                            <td>{{ $product->name }}</td>
-                            <td>
-                            <a href="{{ $product->category ? route('categories.view', ['category' => $product->category->code]) : '#' }}">
-                                {{ $product->category ? $product->category->name : 'No Category' }}
-                            </a>
-                            </td>
-                            <td>${{ number_format($product->price, 2) }}</td>
-                            <td>{{ $product->shops_count }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="pagination-container">
-                {{ $products->links() }}
-            </div>
-        @else
-            <p class="no-results">No products found.</p>
-        @endif
-    </div>
+    @if (isset($products) && count($products) > 0)
+        <div class="product-grid">
+            @php
+                session()->put('bookmark.products.view', url()->full());
+            @endphp
+
+            @foreach ($products as $product)
+                <div class="product-card">
+                    <a href="{{ route('products.view', $product->code) }}">
+                        <div class="product-image">
+                            {{-- Debugging: Uncomment the next line to see the URL being generated --}}
+                            {{-- {{ dd($product->image_url ?? asset('images/products/1.jpeg')) }} --}}
+
+                           <img src="{{ $product->image_url ?: asset('images/products/1.jpeg') }}" alt="{{ $product->name }}">
+
+                          
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">{{ $product->name }}</h3>
+                            <p class="product-category">
+                                <a href="{{ $product->category ? route('categories.view', ['category' => $product->category->code]) : '#' }}">
+                                    {{ $product->category ? $product->category->name : 'No Category' }}
+                                </a>
+                            </p>
+                            <p class="product-price">${{ number_format($product->price, 2) }}</p>
+                            <p class="product-shops">Available in {{ $product->shops_count }} shops</p>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+        
+        <div class="pagination-container">
+            {{ $products->links() }}
+        </div>
+    @else
+        <p class="no-results">No products found.</p>
+    @endif
+</div>
 @endsection

@@ -4,8 +4,7 @@
 
 @section('content')
     <div class="content-wrapper">
-        <h1 class="page-title">User List</h1>
-        <form action="{{ route('users.list') }}" method="get" class="search-form">
+        <!-- <form action="{{ route('users.list') }}" method="get" class="search-form">
             <div class="search-container">
                 <label class="app-inp-search">
                     <label>Search <span class="separator text-blue-600">::</span></label>
@@ -17,7 +16,7 @@
                 <button type="submit" class="primary-button">Search</button>
                 <a href="{{ route('users.list') }}" class="secondary-button">Clear</a>
             </div>
-        </form>
+        </form> -->
         <a href="{{ route('users.create-form') }}" class="new-product-button">New User</a>
 
         @if (isset($users) && count($users) > 0)
