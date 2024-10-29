@@ -41,7 +41,9 @@
                     </thead>
                     @foreach ($shops as $shop)
                         <tr>
-                            <td class="Table-code" >{{ $shop->code }}</td>
+                            <td class="Table-code" >
+                                <a href="{{ route('shops.view', $shop->code) }}">{{ $shop->code }}</a>
+                            </td>
                             <td><em>{{ $shop->name }}</em></td>
                             <td>{{ $shop->owner }}</td>
                             <td>

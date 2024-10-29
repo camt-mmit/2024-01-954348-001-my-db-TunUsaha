@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,21 +12,28 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    function showLoginForm(): View
-    {
-        return view('logins.form');
+    public function showLoginForm(): View
+{
+    // Check if the user is logged in.
+    if (Auth::check()) {
+        // If the user is logged in, log them out.
+        $this->logout();
     }
+    return view('logins.form');
+}
 
-    function logout(): RedirectResponse
-    {
-        Auth::logout();
-        session()->invalidate();
 
-        // regenerate CSRF token
-        session()->regenerateToken();
+public function logout(): RedirectResponse
+{
+    Auth::logout(); // Log out
+    session()->invalidate(); // Clear session data
 
-        return redirect()->route('login');
-    }
+    // Regenerate CSRF token
+    session()->regenerateToken(); // Generate a new CSRF token
+
+    return redirect()->route('login'); // Redirect to the login page
+}
+
 
     public function authenticate(ServerRequestInterface $request): RedirectResponse
     {
@@ -44,8 +50,8 @@ class LoginController extends Controller
             // regenerate the new session ID
             session()->regenerate();
 
-            // redirect to the requested URL or to route products.list if does not specify
-            return redirect()->intended(route('products.list'));
+            // redirect to the requested URL or to route home if does not specify
+            return redirect()->intended(route('home'));
         } else {
             // if cannot authenticate redirect back to loginForm with error message.
             return redirect()->back()->withErrors([

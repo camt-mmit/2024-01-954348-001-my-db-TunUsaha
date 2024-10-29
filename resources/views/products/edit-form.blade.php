@@ -12,12 +12,12 @@
 
             <div class="form-group">
                 <label for="code">Code</label>
-                <input type="text" id="code" name="code" class="price-input" value="{{ $product->code }}" readonly>
+                <input type="text" id="code" name="code" class="price-input" value="{{old('code', $product->code) }}" readonly>
             </div>
 
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" class="price-input" value="{{ $product->name }}"
+                <input type="text" id="name" name="name" class="price-input" value="{{old('name', $product->name) }}"
                     required>
             </div>
 
@@ -26,9 +26,10 @@
                 <select id="category" name="category_id">
                     <option value="">-- Please select a category --</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
-                            [{{ $category->code }}] {{ $category->name }}
-                        </option>
+                    <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                        [{{ $category->code }}] {{ $category->name }}
+                    </option>
+
                     @endforeach
                 </select>
             </div>
@@ -36,12 +37,12 @@
             <div class="form-group">
                 <label for="price">Price</label>
                 <input type="number" id="price" step="any" name="price" class="price-input"
-                    value="{{ $product->price }}" required>
+                value="{{old('price', $product->price) }}" required>
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" rows="5" class="price-input" required>{{ $product->description }}</textarea>
+                <textarea id="description" name="description" rows="5" class="price-input" required>{{old('description', $product->description) }}</textarea>
             </div>
 
             <div class="button-group">

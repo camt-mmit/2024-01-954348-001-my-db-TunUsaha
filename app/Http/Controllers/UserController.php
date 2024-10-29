@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 class UserController extends Controller
 {
     protected string $title = 'Users';
@@ -32,22 +33,25 @@ class UserController extends Controller
     }
 
     public function list(Request $request): View
-    {
-        $search = $request->query('term');
-        $query = $this->getQuery()->when($search, function ($query) use ($search) {
-            return $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('role', 'like', "%{$search}%");
-        });
+{
+    Gate::authorize('viewAny', User::class); // Authorization check
 
-        $users = $query->paginate($this->getItemsPerPage());
+    $search = $request->query('term');
+    $query = $this->getQuery()->when($search, function ($query) use ($search) {
+        return $query->where('name', 'like', "%{$search}%")
+            ->orWhere('email', 'like', "%{$search}%")
+            ->orWhere('role', 'like', "%{$search}%");
+    });
 
-        return view($this->getListViewName(), [
-            'title' => 'User List',
-            'search' => ['term' => $search],
-            'users' => $users,
-        ]);
-    }
+    $users = $query->paginate($this->getItemsPerPage());
+
+    return view($this->getListViewName(), [
+        'title' => 'User List',
+        'search' => ['term' => $search],
+        'users' => $users,
+    ]);
+}
+
 
 
     public function show(string $email): View
@@ -67,74 +71,91 @@ class UserController extends Controller
         ]);
     }
 
-    public function create(Request $request): RedirectResponse
-    {
-        Gate::authorize('create', User::class); // Authorization check
+    public function create(Request $request)
+{
+    Gate::authorize('create', User::class); // Authorization check
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:ADMIN,USER', // ทำให้ต้องมีการระบุ
-        ]);
+    try {
+    // Validation
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|string|min:0|confirmed',
+        'role' => 'required|string|in:ADMIN,USER',
+    ]);
+
+    // Create a new user
+    $user = User::create(array_merge($validatedData, [
+        'password' => bcrypt($request->password),
+    ]));
+
+    return redirect()->route('users.list')
+        ->with('status', "User {$user->name} was created.");
+}catch (\Exception $excp) {
+    return redirect()->back()->withInput()->withErrors([
+        'error' => $excp->getMessage(),
+    ]);
+}
+}
+
+public function showEditForm(string $userId): View
+{
+    $user = User::findOrFail($userId);
+    $currentUser = Auth::user(); // ใช้ Auth แทน auth()
+
+    Gate::authorize('update', $user);
+
+    return view('users.edit-form', [
+        'user' => $user,
+        'currentUser' => $currentUser,
+        'title' => "Edit User: " . $user->name,
+    ]);
+}
 
 
-        $user = User::create(array_merge($validatedData, [
-            'password' => bcrypt($request->password),
-            'role' => $request->role,
-        ]));
+public function update(Request $request, string $userId): RedirectResponse
+{
+    $user = User::findOrFail($userId);
+    Gate::authorize('update', $user);
 
+    try {
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $userId,
+        'password' => 'nullable|string|min:6',
+        'role' => 'required|string|in:ADMIN,USER',
+    ]);
 
-        return redirect()
-            ->route('users.list')
-            ->with('status', "User {$user->name} was created.");
-    }
+    $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
 
-    public function showEditForm(string $userId): View
-    {
-        Gate::authorize('update', User::class); // Authorization check
-
-        $user = User::findOrFail($userId);
-        return view('users.edit-form', [
-            'user' => $user,
-            'title' => "Edit User: " . $user->name,
-        ]);
-    }
-
-
-
-    public function update(Request $request, string $userId): RedirectResponse
-    {
-        Gate::authorize('update', User::class); // Authorization check
-
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $userId,
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        $user = User::findOrFail($userId);
-        $user->update(array_filter($validatedData, fn($value) => !is_null($value)));
-
-        return redirect()
-            ->route('users.list')
-            ->with('status', "User {$user->name} was updated.");
-    }
-
+    return redirect()
+        ->route('users.list')
+        ->with('status', "User {$user->name} was updated.");
+}catch (\Exception $excp) {
+    return redirect()->back()->withInput()->withErrors([
+        'error' => $excp->getMessage(),
+    ]);
+}
+}
 
     public function delete(string $userId): RedirectResponse
     {
         $userToDelete = User::findOrFail($userId);
+        // Check authorization
+        Gate::authorize('delete', [$userToDelete]); // Send the variable to be deleted
 
-        // ตรวจสอบการอนุญาต
-        Gate::authorize('delete', [$userToDelete]); // ส่งตัวแปรที่ต้องการลบ
-
+        try {
         $userToDelete->delete();
 
         return redirect()
             ->route('users.list')
             ->with('status', "User {$userToDelete->name} was deleted.");
+    }catch (\Exception $excp) {
+        return redirect()->back()->withInput()->withErrors([
+            'error' => $excp->getMessage(),
+        ]);
     }
+}
 
 
     public function showSelf(): View
@@ -157,15 +178,12 @@ class UserController extends Controller
         ]);
     }
 
-
     public function updateSelf(Request $request, $id): RedirectResponse
     {
         $user = User::findOrFail($id);
+        Gate::authorize('update', $user);
 
-        if (!Auth::check() || Auth::id() !== $user->id) {
-            return redirect()->route('login')->with('error', 'Please log in first.');
-        }
-
+        try {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -182,5 +200,10 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('users.self', $user->id)->with('status', "Your profile has been updated.");
+    }catch (\Exception $excp) {
+        return redirect()->back()->withInput()->withErrors([
+            'error' => $excp->getMessage(),
+        ]);
     }
+}
 }

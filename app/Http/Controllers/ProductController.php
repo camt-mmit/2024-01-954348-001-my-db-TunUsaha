@@ -11,6 +11,7 @@ use App\Models\Shop;
 use Psr\Http\Message\ServerRequestInterface;
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\QueryException;
 
 class ProductController extends SearchableController
 {
@@ -102,19 +103,24 @@ class ProductController extends SearchableController
     public function create(Request $request): RedirectResponse
     {
         Gate::authorize('create', Product::class); // Authorization check
+        try {
+            $validatedData = $request->validate([
+                'code' => 'required|unique:products',
+                'name' => 'required',
+                'category_id' => 'required|exists:categories,id',
+                'price' => 'required|numeric|min:0',
+                'description' => 'required',
+            ]);
 
-        $validatedData = $request->validate([
-            'code' => 'required|unique:products',
-            'name' => 'required',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required',
-        ]);
-
-        $product = Product::create($validatedData);
-        return redirect()
-            ->route('products.list')
-            ->with('status', "Product {$product->code} was created.");
+            $product = Product::create($validatedData);
+            return redirect()
+                ->route('products.list')
+                ->with('status', "Product {$product->code} was created.");
+        } catch (\Exception $excp) {
+            return redirect()->back()->withInput()->withErrors([
+                'error' => $excp->getMessage(),
+            ]);
+        }
     }
 
 
@@ -122,6 +128,7 @@ class ProductController extends SearchableController
     {
         Gate::authorize('update', Product::class); // Authorization check
 
+        try {
         $validatedData = $request->validate([
             'code' => 'required|string|unique:products,code,' . $productCode . ',code',
             'name' => 'required|string|max:255',
@@ -136,7 +143,13 @@ class ProductController extends SearchableController
         return redirect()
             ->route('products.list')
             ->with('status', "Product {$product->code} was updated.");
+    }catch (\Exception $excp) {
+        return redirect()->back()->withInput()->withErrors([
+            'error' => $excp->getMessage(),
+        ]);
     }
+}
+
     function delete(string $productCode): RedirectResponse
     {
         Gate::authorize('delete', Product::class); // Authorization check
@@ -150,18 +163,19 @@ class ProductController extends SearchableController
 
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
-    {
-        $title = $customTitle ?? $this->title;
-        if ($view == 'products.list') {
-            return view($view, array_merge([
-                'title' => $title,
-            ], $data));
-        } else {
-            return view($view, array_merge([
-                'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
-            ], $data));
-        }
+{
+    $title = $customTitle ?? $this->title;
+    if ($view == 'products.list') {
+        return view($view, array_merge([
+            'title' => $title,
+        ], $data));
+    } else {
+        return view($view, array_merge([
+            'title' => "{$title} : " . ucfirst(last(explode('.', $view))),
+        ], $data));
     }
+}
+
     function showAddShopsForm(
         ServerRequestInterface $request,
         ShopController $shopController,
@@ -192,22 +206,30 @@ class ProductController extends SearchableController
     {
         Gate::authorize('update', Product::class); // Authorization check
 
-        $product = $this->find($productCode);
-        $data = $request->getParsedBody();
-        $shop = Shop::whereDoesntHave('products', function (Builder $innerQuery) use ($product) {
-            return $innerQuery->where('code', $product->code);
-        })->where('code', $data['shop'])->firstOrFail();
-        $product->shops()->attach($shop);
+        try {
+            $product = $this->find($productCode);
+            $data = $request->getParsedBody();
+            $shop = Shop::whereDoesntHave('products', function (Builder $innerQuery) use ($product) {
+                return $innerQuery->where('code', $product->code);
+            })->where('code', $data['shop'])->firstOrFail();
+            $product->shops()->attach($shop);
 
-        return redirect()
-            ->route('products.add-shop', ['product' => $productCode])
-            ->with('status', "Shop {$shop->code} was added to Product {$product->code}.");
+            return redirect()
+                ->route('products.add-shop', ['product' => $productCode])
+                ->with('status', "Shop {$shop->code} was added to Product {$product->code}.");
+        } catch (QueryException $excp) {
+            // We don't want withInput() here.
+            return redirect()->back()->withErrors([
+                'error' => $excp->errorInfo[2],
+            ]);
+        }
     }
 
     function removeShop(string $productCode, string $shopCode): RedirectResponse
     {
         Gate::authorize('update', Product::class); // Authorization check
 
+        try {
         $product = $this->find($productCode);
         $shop = $product->shops()
             ->where('code', $shopCode)
@@ -217,5 +239,12 @@ class ProductController extends SearchableController
         return redirect()
             ->back()
             ->with('status', "Shop {$shop->code} was removed from Product {$product->code}.");
+    }catch(QueryException $excp) {
+        // We don't want withInput() here.
+        return redirect()->back()->withErrors([
+        'error' => $excp->errorInfo[2],
+        ]);
+        }
+        }
     }
-}
+

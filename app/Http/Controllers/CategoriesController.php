@@ -83,16 +83,22 @@ class CategoriesController extends SearchableController
 
     public function create(Request $request): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'code' => 'required|unique:categories',
-            'name' => 'required',
-            'description' => 'nullable',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'code' => 'required|unique:categories',
+                'name' => 'required',
+                'description' => 'nullable',
+            ]);
 
-        $category = Category::create($validatedData);
-        return redirect()
-            ->route('categories.list')
-            ->with('status', "Category {$category->code} was created.");
+            $category = Category::create($validatedData);
+            return redirect()
+                ->route('categories.list')
+                ->with('status', "Category {$category->code} was created.");
+        } catch (\Exception $excp) {
+            return redirect()->back()->withInput()->withErrors([
+                'error' => $excp->getMessage(),
+            ]);
+        }
     }
 
     public function showEditForm(string $category): View
@@ -105,28 +111,43 @@ class CategoriesController extends SearchableController
 
     public function update(Request $request, string $categoryCode): RedirectResponse
     {
-        $category = $this->find($categoryCode);
+        try {
+            $category = $this->find($categoryCode);
 
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'description' => 'nullable',
-        ]);
+            $validatedData = $request->validate([
+                'name' => 'required',
+                'description' => 'nullable',
+            ]);
 
-        $category->update($validatedData);
-        return redirect()
-            ->route('categories.list')
-            ->with('status', "Category {$category->code} was updated.");
+            $category->update($validatedData);
+            return redirect()
+                ->route('categories.list')
+                ->with('status', "Category {$category->code} was updated.");
+        } catch (\Exception $excp) {
+            return redirect()->back()->withInput()->withErrors([
+                'error' => $excp->getMessage(),
+            ]);
+        }
     }
 
     public function delete(string $category): RedirectResponse
 {
     $category = $this->find($category);
-    Gate::authorize('delete', $category); // ตรวจสอบสิทธิ์การลบ
-    $category->delete();
-    return redirect(
-        session()->get('categories.view', route('categories.list'))
-    )->with('status', "Category {$category->code} was deleted.");
+    // Check permission using Category object
+    Gate::authorize('delete', $category);
+
+    try {
+        $category->delete();
+        return redirect(
+            session()->get('categories.view', route('categories.list'))
+        )->with('status', "Category {$category->code} was deleted.");
+    } catch (\Exception $excp) {
+        return redirect()->back()->withInput()->withErrors([
+            'error' => $excp->getMessage(),
+        ]);
+    }
 }
+
 
 
     protected function view(string $view, array $data = [], string $customTitle = null): View
@@ -162,15 +183,21 @@ class CategoriesController extends SearchableController
 
     function addProduct(ServerRequestInterface $request, string $categoryCode): RedirectResponse
     {
-        $category = $this->find($categoryCode);
-        $data = $request->getParsedBody();
-        $product = Product::whereDoesntHave('shops', function (Builder $innerQuery) use ($category) {
-            return $innerQuery->where('code', $category->code);
-        })->where('code', $data['product'])->firstOrFail();
-        $category->products()->attach($product);
-        return redirect()
-            ->route('categories.add-product', ['category' => $categoryCode])
-            ->with('status', "Product {$product->code} was added to Shop {$category->code}.");
+        try {
+            $category = $this->find($categoryCode);
+            $data = $request->getParsedBody();
+            $product = Product::whereDoesntHave('shops', function (Builder $innerQuery) use ($category) {
+                return $innerQuery->where('code', $category->code);
+            })->where('code', $data['product'])->firstOrFail();
+            $category->products()->attach($product);
+            return redirect()
+                ->route('categories.add-product', ['category' => $categoryCode])
+                ->with('status', "Product {$product->code} was added to Shop {$category->code}.");
+        } catch (\Exception $excp) {
+            return redirect()->back()->withInput()->withErrors([
+                'error' => $excp->getMessage(),
+            ]);
+        }
     }
 
     function removeProduct(string $categoryCode, string $productCode): RedirectResponse

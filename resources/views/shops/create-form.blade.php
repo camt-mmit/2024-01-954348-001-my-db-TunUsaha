@@ -15,32 +15,32 @@
 
             <div class="form-group">
                 <label for="code">Code</label>
-                <input type="text" id="code" name="code" required>
+                <input type="text" id="code" name="code" value="{{ old('code') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="owner">Owner</label>
-                <input type="text" id="owner" name="owner" required>
+                <input type="text" id="owner" name="owner" value="{{ old('owner') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="latitude">Latitude</label>
-                <input type="number" id="latitude" name="latitude" step="any" required>
+                <input type="number" id="latitude" name="latitude" step="any" value="{{ old('latitude') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="longitude">Longitude</label>
-                <input type="number" id="longitude" name="longitude" step="any" required>
+                <input type="number" id="longitude" name="longitude" step="any" value="{{ old('longitude') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="address">Address</label>
-                <textarea id="address" name="address" rows="5" required class="price-input"></textarea>
+                <textarea id="address" name="address" rows="5" required class="price-input">{{ old('address') }}</textarea>
             </div>
 
             <div class="button-group">

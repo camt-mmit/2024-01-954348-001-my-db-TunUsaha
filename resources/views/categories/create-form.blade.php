@@ -15,17 +15,17 @@
 
             <div class="form-group">
                 <label for="code">Code</label>
-                <input type="text" id="code" name="code" required>
+                <input type="text" id="code" name="code" value="{{ old('code') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" rows="5" required class="price-input"></textarea>
+                <textarea id="description" name="description" rows="5" required class="price-input">{{ old('description') }}</textarea>
             </div>
             <div class="button-group">
                 <button type="submit" class="primary-button ">Create Category</button>

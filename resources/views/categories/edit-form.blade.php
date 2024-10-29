@@ -12,18 +12,18 @@
 
             <div class="form-group">
                 <label for="code">Code</label>
-                <input type="text" id="code" name="code" class="price-input" value="{{ $category->code }}" readonly>
+                <input type="text" id="code" name="code" class="price-input" value="{{old('code', $category->code) }}" readonly>
             </div>
 
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" class="price-input" value="{{ $category->name }}"
+                <input type="text" id="name" name="name" class="price-input"  value="{{old('name', $category->name) }}"
                     required>
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" rows="5" class="price-input" required>{{ $category->description }}</textarea>
+                <textarea id="description" name="description" rows="5" class="price-input" required>{{old('description', $category->description) }}</textarea>
             </div>
 
             <div class="button-group">
